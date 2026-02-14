@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Jinghua Gu",
+    "email": "2040519464@qq.com",
+    "affiliations": [
+      "Anhui Medical University"
+    ],
+    "role": "Editor in Chief",
+    "interests": "Bioinformatics",
+    "orcid": "0009-0000-8691-1312"
+  },
+  {
+    "name": "Chihaya Anon",
+    "email": "shiyaostudio@163.com",
+    "affiliations": [
+      "Royal Historical Society"
+    ],
+    "role": "Editor in Chief",
+    "interests": "Environmental history",
+    "orcid": "0000-0002-7093-3506"
+  },
+  {
+    "name": "Qing Pan",
+    "email": "panqing@gt.cn",
+    "affiliations": [
+      "Panjin Liaohe Oilfield Baoshihua Hospital",
+      "Shenyang Aerospace University",
+      "Minnan Normal University"
+    ],
+    "role": "Editor in Chief",
+    "interests": "Computer Science and Technology",
+    "orcid": "0009-0001-1253-6481"
+  },
+  {
+    "name": "Xinrui Bai",
+    "email": "bxr15900638191@163.com",
+    "affiliations": [
+      "Gansu Provincial People’s Hospital"
+    ],
+    "role": "Associate Editor",
+    "interests": "Medicine",
+    "orcid": "0009-0008-8577-4940"
+  },
+  {
+    "name": "Jingqi Li",
+    "email": "ljq2005012023@163.com",
+    "affiliations": [
+      "Hebei Medical University"
+    ],
+    "role": "Editorial Board Member",
+    "interests": "Medicine",
+    "orcid": "0009-0005-2915-2870"
+  },
+  {
+    "name": "Zhen Ren",
+    "email": "dylan214@126.com",
+    "affiliations": [
+      "Dalian University of Technology"
+    ],
+    "role": "Editorial Board Member",
+    "interests": "Science",
+    "orcid": "0009-0009-2492-7410"
+  }
+]
