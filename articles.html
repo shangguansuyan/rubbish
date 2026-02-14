@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Articles</title>
+
+  <style>
+    :root{
+      --bg:#fff; --fg:#111; --muted:#5b5b5b; --line:#e7e7e7; --chip:#f4f4f4;
+      --link:#0b57d0; --max:980px; --radius:16px; --shadow:0 18px 44px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--fg)}
+    a{color:var(--link);text-decoration:none} a:hover{text-decoration:underline}
+    header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:10}
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .crumbs{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+    .crumbs a{color:inherit}
+    .brand{font-weight:900;color:#111}
+
+    .search input{
+      width:min(520px, 100%);
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+
+    h1{margin:18px 0 8px;font-size:28px;letter-spacing:-.3px;font-weight:950}
+    .muted{color:var(--muted);font-size:12.8px;line-height:1.65}
+
+    .articles{display:flex;flex-direction:column;gap:12px;padding:14px 0 34px}
+    .article{border:1px solid var(--line);border-radius:var(--radius);padding:12px;background:#fff}
+    .article h3{margin:0 0 6px;font-size:15px;line-height:1.35;font-weight:850}
+    .article .meta{margin:0;color:var(--muted);font-size:12.6px;line-height:1.55}
+    .doi{display:inline-flex;align-items:center;gap:8px;margin-top:8px}
+    .doi a{display:inline-block;border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:999px;font-size:12.5px;text-decoration:none}
+    .doi a:hover{border-color:#cfcfcf;text-decoration:none}
+
+    .status{border-top:1px solid var(--line);padding:12px 0;color:var(--muted);font-size:13px;white-space:pre-wrap}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="crumbs">
+        <a href="index.html" class="brand">Rubbish</a>
+        <span>›</span>
+        <a id="crumbJournal" href="#">Journal</a>
+        <span>›</span>
+        <span>Articles</span>
+      </div>
+      <div class="search">
+        <input id="q" type="search" placeholder="Search by title, authors, DOI" autocomplete="off">
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1 id="title">Articles</h1>
+  <p class="muted" id="subtitle">Loading…</p>
+
+  <div id="articles" class="articles" aria-live="polite"></div>
+  <div id="status" class="status"></div>
+</main>
+
+<script>
+(() => {
+  const OWNER="shangguansuyan", REPO="rubbish", BRANCH="main";
+  const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+
+  const qs = new URLSearchParams(location.search);
+  const folder = qs.get("j") || "";
+
+  const elTitle = document.getElementById("title");
+  const elSubtitle = document.getElementById("subtitle");
+  const elArticles = document.getElementById("articles");
+  const elStatus = document.getElementById("status");
+  const q = document.getElementById("q");
+
+  const crumbJournal = document.getElementById("crumbJournal");
+
+  if(!folder){
+    elTitle.textContent = "Articles";
+    elSubtitle.textContent = "Invalid journal link.";
+    return;
+  }
+
+  crumbJournal.href = `journal.html?j=${encodeURIComponent(folder)}`;
+
+  const esc = (s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  function normalizeDoi(input){
+    const s = (input||"").trim();
+    if(!s) return "";
+    if(/^10\./.test(s)) return s.replace(/[)\],.]+$/,"");
+    const m = s.match(/10\.\d{4,9}\/\S+/);
+    return m ? m[0].replace(/[)\],.]+$/,"") : s;
+  }
+  function doiLink(doi){
+    const d = normalizeDoi(doi);
+    return `https://doi.org/${encodeURIComponent(d)}`;
+  }
+
+  async function fetchJSON(url){
+    const res = await fetch(url, { headers:{ "Accept":"application/vnd.github+json" }});
+    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    return await res.json();
+  }
+
+  function parseJSONL(text){
+    const lines = text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    const out = [];
+    for(const ln of lines){
+      try{ out.push(JSON.parse(ln)); } catch {}
+    }
+    out.sort((a,b)=> (b.ts||0) - (a.ts||0));
+    return out;
+  }
+
+  function render(list){
+    const term = (q.value||"").trim().toLowerCase();
+    const filtered = !term ? list : list.filter(a =>
+      String(a.title||"").toLowerCase().includes(term) ||
+      String(a.authors||"").toLowerCase().includes(term) ||
+      String(a.affiliations||"").toLowerCase().includes(term) ||
+      String(a.orcid||"").toLowerCase().includes(term) ||
+      String(a.doi||"").toLowerCase().includes(term)
+    );
+
+    elArticles.innerHTML = filtered.map(a=>{
+      const title = esc(a.title || "Untitled");
+      const authors = esc(a.authors || "");
+      const aff = esc(a.affiliations || "");
+      const orcid = esc(a.orcid || "");
+      const doi = esc(a.doi || "");
+      const link = doi ? doiLink(doi) : "";
+      return `
+        <div class="article">
+          <h3>${title}</h3>
+          <p class="meta"><b>Authors:</b> ${authors || "—"}</p>
+          <p class="meta"><b>Affiliations:</b> ${aff || "—"}</p>
+          <p class="meta"><b>ORCID:</b> ${orcid || "—"}</p>
+          <div class="doi">
+            <span class="meta"><b>DOI:</b> ${doi || "—"}</span>
+            ${doi ? `<a href="${esc(link)}" target="_blank" rel="noopener">Open DOI</a>` : ``}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    elStatus.textContent = `${filtered.length} shown · ${list.length} total`;
+  }
+
+  async function init(){
+    // journal name
+    let journalName = folder;
+    try{
+      const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
+      if(item && item.content){
+        journalName = atob(item.content.replace(/\n/g,"")).trim() || folder;
+      }
+    } catch {}
+
+    document.title = `${journalName} | Articles`;
+    elTitle.textContent = `${journalName} — Articles`;
+    elSubtitle.textContent = "Search the full index below.";
+
+    const raw = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encodeURIComponent(folder)}/article.txt?t=${Date.now()}`;
+    const res = await fetch(raw, { cache:"no-store" });
+    if(res.status === 404){
+      render([]);
+      elSubtitle.textContent = "No indexed articles yet.";
+      return;
+    }
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    const list = parseJSONL(text);
+    render(list);
+
+    q.addEventListener("input", ()=>render(list));
+  }
+
+  init().catch(err=>{
+    console.error(err);
+    elSubtitle.textContent = "Failed to load index.";
+    elStatus.textContent = String(err.message || err);
+  });
+})();
+</script>
+</body>
+</html>
