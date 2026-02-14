@@ -13,7 +13,7 @@
       --line:#e7e7e7;
       --chip:#f4f4f4;
       --link:#0b57d0;
-      --max:1100px;
+      --max:1120px;
       --radius:14px;
     }
     *{box-sizing:border-box}
@@ -42,9 +42,7 @@
       font-size:13px;
     }
     .crumbs a{color:inherit}
-    .brand{
-      font-weight:800; color:#111;
-    }
+    .brand{font-weight:800; color:#111;}
     .btn{
       border:1px solid var(--line);
       background:#111;
@@ -57,20 +55,16 @@
     }
     .btn:disabled{opacity:.5; cursor:not-allowed}
     .btn:active{transform:translateY(1px)}
-    .btn.secondary{
-      background:#fff;
-      color:#111;
-    }
+    .btn.secondary{background:#fff; color:#111;}
 
     .hero{
       display:grid;
       grid-template-columns: 320px 1fr;
       gap:18px;
-      padding:18px 0 8px;
+      padding:18px 0 10px;
       border-bottom:1px solid var(--line);
     }
     @media (max-width: 860px){ .hero{grid-template-columns: 1fr;} }
-
     .cover{
       width:100%;
       aspect-ratio: 4/3;
@@ -79,13 +73,9 @@
       object-fit:cover;
       background:#f6f6f6;
     }
-    h1{
-      margin:0 0 8px;
-      font-size:30px;
-      letter-spacing:-.3px;
-    }
-    .desc{margin:0; color:var(--muted); line-height:1.55; font-size:14px;}
-    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+    h1{ margin:0 0 8px; font-size:30px; letter-spacing:-.3px; }
+    .desc{ margin:0; color:var(--muted); line-height:1.6; font-size:14px; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     .pill{
       font-size:12px;
       padding:5px 10px;
@@ -110,11 +100,8 @@
       padding:14px;
       background:#fff;
     }
-    .panel h2{
-      margin:0 0 10px;
-      font-size:16px;
-    }
-    .muted{color:var(--muted); font-size:12.5px; line-height:1.55;}
+    .panel h2{ margin:0 0 10px; font-size:16px; }
+    .muted{ color:var(--muted); font-size:12.5px; line-height:1.6; }
     .search input{
       width:100%;
       padding:10px 12px;
@@ -124,32 +111,17 @@
       outline:none;
     }
 
-    .articles{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+    .articles{ display:flex; flex-direction:column; gap:12px; }
     .article{
       border:1px solid var(--line);
       border-radius:var(--radius);
       padding:12px 12px;
       background:#fff;
     }
-    .article h3{
-      margin:0 0 6px;
-      font-size:15px;
-      line-height:1.3;
-    }
-    .article .meta{
-      margin:0;
-      color:var(--muted);
-      font-size:12.5px;
-      line-height:1.45;
-    }
-    .hr{
-      height:1px; background:var(--line);
-      margin:12px 0;
-    }
+    .article h3{ margin:0 0 6px; font-size:15px; line-height:1.3; }
+    .article .meta{ margin:0; color:var(--muted); font-size:12.5px; line-height:1.5; }
+
+    .hr{ height:1px; background:var(--line); margin:12px 0; }
 
     label{display:block; font-size:12px; color:#333; margin:10px 0 6px;}
     input, textarea{
@@ -162,24 +134,30 @@
     }
     textarea{min-height:84px; resize:vertical}
 
-    .danger{
-      color:#b00020;
-      font-size:12.5px;
-      line-height:1.4;
-      margin-top:8px;
-      white-space:pre-wrap;
-    }
-    .ok{
-      color:#0b7a2a;
-      font-size:12.5px;
-      line-height:1.4;
-      margin-top:8px;
-      white-space:pre-wrap;
-    }
+    .danger{ color:#b00020; font-size:12.5px; line-height:1.45; margin-top:8px; white-space:pre-wrap; }
+    .ok{ color:#0b7a2a; font-size:12.5px; line-height:1.45; margin-top:8px; white-space:pre-wrap; }
+
     .mono{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size:12px;
     }
+
+    .members{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:10px;
+    }
+    .member{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 10px;
+      background:#fff;
+    }
+    .member .name{ font-weight:800; font-size:13.5px; margin:0 0 4px; }
+    .member .role{ font-size:12px; color:#333; margin:0 0 4px; }
+    .member .aff{ font-size:12px; color:var(--muted); margin:0; line-height:1.45; }
+    .member a{ word-break:break-all; }
   </style>
 </head>
 
@@ -204,15 +182,14 @@
     <img id="cover" class="cover" alt="Journal cover" />
     <div>
       <h1 id="title">Journal</h1>
-      <p class="desc">
-        Submissions are handled through Zenodo. Upload your PDF on Zenodo to obtain a DOI, then return here and
-        register the metadata. Registration is performed by creating a GitHub Issue which is processed automatically
-        to update <b>article.txt</b> in this journal folder.
+      <p class="desc" id="journalIntro">
+        This journal publishes rigorously documented boundary findings, including well-executed negative results,
+        informative failed experiments, and reproducible anomalies that merit careful record and discussion.
       </p>
       <div class="row">
         <span class="pill" id="pillFolder">folder</span>
         <span class="pill">Open access</span>
-        <span class="pill">Live index</span>
+        <span class="pill">Method-first</span>
       </div>
     </div>
   </section>
@@ -220,9 +197,21 @@
   <section class="content">
     <div>
       <div class="panel">
+        <h2>Aims & Scope</h2>
+        <p class="muted">
+          The Rubbish series provides a structured venue for results that are frequently underrepresented despite high scientific value:
+          (i) negative results and null findings obtained under well-controlled conditions; (ii) failed experiments whose protocols,
+          constraints, and troubleshooting paths carry transferable methodological insight; (iii) reproducible anomalous observations
+          that are statistically credible yet difficult to reconcile with prevailing models; and (iv) short laboratory reports describing
+          unusual, surprising, or “mind-shifting” phenomena observed during routine research, provided the reporting remains transparent,
+          method-anchored, and non-speculative.
+        </p>
+
+        <div class="hr"></div>
+
         <h2>Articles</h2>
         <div class="search" style="margin:10px 0 12px;">
-          <input id="search" type="search" placeholder="Search by title, author, DOI" autocomplete="off" />
+          <input id="search" type="search" placeholder="Search by title, authors, DOI" autocomplete="off" />
         </div>
         <div id="articles" class="articles" aria-live="polite"></div>
         <p id="articlesStatus" class="muted" style="margin-top:10px;">Loading…</p>
@@ -231,48 +220,39 @@
 
     <aside>
       <div class="panel">
-        <h2>Register your article (all fields required)</h2>
+        <h2>Submission</h2>
         <p class="muted">
-          1) Click <b>Submit via Zenodo</b> to log in and upload your PDF.<br/>
-          2) Copy the DOI assigned by Zenodo (or any DOI resolver DOI).<br/>
-          3) Fill in all fields below.<br/>
-          4) Click <b>Open GitHub Issue Draft</b>, then submit the issue in the new tab.<br/>
-          5) The index will update automatically after the workflow runs.
+          Upload your PDF to Zenodo to obtain a DOI, then return here and register the metadata.
+          Registration is performed by submitting a GitHub Issue (no GitHub token required). A workflow will validate the required fields
+          and append the record to <b>article.txt</b> in this journal folder.
         </p>
 
         <div class="hr"></div>
 
-        <label>Title</label>
+        <label>Title (required)</label>
         <textarea id="fTitle" placeholder="Article title"></textarea>
 
-        <label>Authors</label>
+        <label>Authors (required)</label>
         <textarea id="fAuthors" placeholder="Author list (e.g., A. Smith; B. Lee)"></textarea>
 
-        <label>Affiliations</label>
+        <label>Affiliations (required)</label>
         <textarea id="fAff" placeholder="Institution(s)"></textarea>
 
-        <label>ORCID</label>
+        <label>ORCID (required)</label>
         <input id="fOrcid" type="text" placeholder="e.g., 0000-0002-1825-0097" />
 
-        <label>DOI</label>
+        <label>DOI (required)</label>
         <input id="fDoi" type="text" placeholder="e.g., 10.5281/zenodo.1234567" />
 
         <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-          <button id="btnIssue" class="btn" type="button">Open GitHub Issue Draft</button>
+          <button id="btnIssue" class="btn" type="button">Open Issue Draft</button>
           <button id="btnRefresh" class="btn secondary" type="button">Refresh list</button>
         </div>
-
-        <p class="muted" style="margin-top:10px;">
-          Note: You must be logged in to GitHub to submit the issue. No GitHub token is required.
-        </p>
 
         <p id="msg" class="muted" style="margin-top:10px;"></p>
 
         <div class="hr"></div>
-
-        <p class="muted">
-          Workflow trigger format (auto-generated in the issue body):
-        </p>
+        <p class="muted">Required issue-body format (auto-generated):</p>
         <pre class="mono" style="margin:8px 0 0; background:#fafafa; border:1px solid var(--line); padding:10px; border-radius:12px; overflow:auto;">JOURNAL_FOLDER: &lt;folder&gt;
 TITLE: &lt;title&gt;
 AUTHORS: &lt;authors&gt;
@@ -280,22 +260,25 @@ AFFILIATIONS: &lt;affiliations&gt;
 ORCID: &lt;orcid&gt;
 DOI: &lt;doi&gt;</pre>
       </div>
+
+      <div class="panel" style="margin-top:18px;">
+        <h2>Editorial Board</h2>
+        <p class="muted" id="membersHint">Loading members…</p>
+        <div id="members" class="members"></div>
+      </div>
     </aside>
   </section>
 </main>
 
 <script>
 (() => {
-  // ===== Repo config =====
   const OWNER = "shangguansuyan";
   const REPO  = "rubbish";
   const BRANCH = "main";
 
-  // ===== Journal folder from query =====
   const qs = new URLSearchParams(location.search);
   const folder = qs.get("j") || "";
 
-  // ===== Elements =====
   const elTitle = document.getElementById("title");
   const elCrumb = document.getElementById("crumbJournal");
   const elPill  = document.getElementById("pillFolder");
@@ -305,7 +288,7 @@ DOI: &lt;doi&gt;</pre>
   const elArticlesStatus = document.getElementById("articlesStatus");
   const elSearch = document.getElementById("search");
 
-  const elMsg   = document.getElementById("msg");
+  const elMsg = document.getElementById("msg");
 
   const elFTitle = document.getElementById("fTitle");
   const elFAuthors = document.getElementById("fAuthors");
@@ -316,6 +299,9 @@ DOI: &lt;doi&gt;</pre>
   const btnZenodo = document.getElementById("btnZenodo");
   const btnIssue = document.getElementById("btnIssue");
   const btnRefresh = document.getElementById("btnRefresh");
+
+  const elMembers = document.getElementById("members");
+  const elMembersHint = document.getElementById("membersHint");
 
   if(!folder){
     elTitle.textContent = "Journal not specified";
@@ -328,7 +314,6 @@ DOI: &lt;doi&gt;</pre>
     return;
   }
 
-  // ===== Utilities =====
   function esc(s){
     return String(s).replace(/[&<>"']/g, (c) => ({
       "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
@@ -359,24 +344,27 @@ DOI: &lt;doi&gt;</pre>
     return await res.json();
   }
 
+  const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
   const isImage = (name) => /\.(png|jpe?g|webp|gif)$/i.test(name);
 
+  async function listFolder(){
+    return await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}?ref=${encodeURIComponent(BRANCH)}`);
+  }
+
   async function readNameTxt(){
-    try{
-      const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
-      const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
-      if(item && item.content){
-        return atob(item.content.replace(/\n/g,"")).trim();
-      }
-    } catch {}
+    const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
+    if(item && item.content){
+      return atob(item.content.replace(/\n/g,"")).trim() || folder;
+    }
     return folder;
   }
 
   async function pickCover(){
     try{
-      const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
-      const items = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}?ref=${encodeURIComponent(BRANCH)}`);
-      const images = items.filter(x => x.type === "file" && isImage(x.name)).sort((a,b)=>a.name.localeCompare(b.name));
+      const items = await listFolder();
+      const images = items
+        .filter(x => x.type === "file" && isImage(x.name))
+        .sort((a,b)=>a.name.localeCompare(b.name));
       if(images.length > 0) return images[0].download_url;
     } catch {}
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
@@ -391,11 +379,7 @@ DOI: &lt;doi&gt;</pre>
     const lines = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
     const out = [];
     for(const ln of lines){
-      try{
-        out.push(JSON.parse(ln));
-      } catch {
-        // ignore malformed
-      }
+      try{ out.push(JSON.parse(ln)); } catch {}
     }
     out.sort((a,b)=> (b.ts||0) - (a.ts||0));
     return out;
@@ -436,13 +420,12 @@ DOI: &lt;doi&gt;</pre>
     elArticlesStatus.textContent = "Loading…";
     elArticles.innerHTML = "";
 
-    // Raw read of article.txt; cache-bust to make it "live"
     const raw = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encodeURIComponent(folder)}/article.txt?t=${Date.now()}`;
 
     try{
       const res = await fetch(raw, { cache: "no-store" });
       if(res.status === 404){
-        elArticlesStatus.textContent = "No articles yet (article.txt not found).";
+        elArticlesStatus.textContent = "No indexed articles yet.";
         renderArticles([]);
         return [];
       }
@@ -453,25 +436,83 @@ DOI: &lt;doi&gt;</pre>
       return list;
     } catch (e){
       console.error(e);
-      elArticlesStatus.textContent = "Failed to load article.txt.";
+      elArticlesStatus.textContent = "Failed to load article index.";
       return [];
     }
   }
 
-  // ===== Actions =====
+  function renderMembers(list){
+    elMembers.innerHTML = list.map(m => {
+      const name = esc(m.name || "—");
+      const role = esc(m.role || "Editorial Board");
+      const interests = esc(m.interests || "");
+      const affArr = Array.isArray(m.affiliations) ? m.affiliations : (m.affiliation ? [m.affiliation] : []);
+      const aff = esc(affArr.filter(Boolean).join("; "));
+      const orcid = (m.orcid || "").trim();
+      const orcidUrl = orcid ? `https://orcid.org/${encodeURIComponent(orcid)}` : "";
+
+      return `
+        <div class="member">
+          <p class="name">${name}</p>
+          <p class="role">${role}</p>
+          <p class="aff"><b>Affiliations:</b> ${aff || "—"}</p>
+          ${interests ? `<p class="aff"><b>Interests:</b> ${interests}</p>` : ``}
+          ${orcid ? `<p class="aff"><b>ORCID:</b> <a href="${esc(orcidUrl)}" target="_blank" rel="noopener">${esc(orcid)}</a></p>` : ``}
+        </div>
+      `;
+    }).join("");
+  }
+
+  async function loadMembers(){
+    const raw = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/members.json?t=${Date.now()}`;
+    try{
+      const res = await fetch(raw, { cache: "no-store" });
+      if(res.status === 404){
+        elMembersHint.textContent = "Editorial board list not available.";
+        elMembers.innerHTML = "";
+        return;
+      }
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if(!Array.isArray(data) || data.length === 0){
+        elMembersHint.textContent = "No editorial board members listed.";
+        elMembers.innerHTML = "";
+        return;
+      }
+
+      // Optional: stable sort by role then name
+      const order = ["Editor in Chief","Co-Editor in Chief","Managing Editor","Associate Editor","Editorial Board"];
+      data.sort((a,b) => {
+        const ra = order.indexOf(a.role || "");
+        const rb = order.indexOf(b.role || "");
+        const pa = ra === -1 ? 999 : ra;
+        const pb = rb === -1 ? 999 : rb;
+        if(pa !== pb) return pa - pb;
+        return String(a.name||"").localeCompare(String(b.name||""));
+      });
+
+      elMembersHint.textContent = `${data.length} member(s)`;
+      renderMembers(data);
+    } catch (e){
+      console.error(e);
+      elMembersHint.textContent = "Failed to load members.";
+      elMembers.innerHTML = "";
+    }
+  }
+
+  // Actions
   btnZenodo.addEventListener("click", () => {
-    // Change to sandbox if you prefer: https://sandbox.zenodo.org/login
     const zenodoLogin = "https://zenodo.org/login";
     window.open(zenodoLogin, "_blank", "noopener");
     setMsg("muted",
-      "Zenodo opened in a new tab. After uploading your PDF and obtaining a DOI, paste it into the DOI field and open the GitHub Issue draft."
+      "Zenodo opened in a new tab. After uploading your PDF and obtaining a DOI, paste it into the DOI field and open the Issue draft."
     );
   });
 
   btnRefresh.addEventListener("click", () => loadArticles());
 
   elSearch.addEventListener("input", async () => {
-    // re-filter by reloading; small repo so OK
     await loadArticles();
   });
 
@@ -488,10 +529,8 @@ DOI: &lt;doi&gt;</pre>
       return;
     }
 
-    // Workflow requires issue title starting with "[ARTICLE] "
     const issueTitle = (`[ARTICLE] ${title}`).slice(0, 180);
 
-    // Body lines parsed by workflow
     const body =
 `JOURNAL_FOLDER: ${folder}
 TITLE: ${title}
@@ -508,15 +547,31 @@ DOI: ${doi}
 
     window.open(url.toString(), "_blank", "noopener");
     setMsg("ok",
-      "A GitHub Issue draft has been opened in a new tab.\n" +
-      "Please submit it. The index will update automatically after the workflow runs.\n" +
-      "Tip: if you do not see the new article immediately, wait a moment and click “Refresh list”."
+      "An Issue draft has been opened in a new tab.\n" +
+      "Submit it. The index will update automatically after the workflow completes.\n" +
+      "If the article does not appear immediately, click “Refresh list”."
     );
   });
 
-  // ===== Init =====
   async function init(){
     elPill.textContent = folder;
+
+    // Validate journal definition (must contain name.txt)
+    try{
+      const items = await listFolder();
+      const ok = items.some(x => x.type === "file" && x.name === "name.txt");
+      if(!ok){
+        elTitle.textContent = "Invalid journal folder";
+        elCrumb.textContent = "Journal";
+        setMsg("danger", "This folder does not contain name.txt and is not recognized as a journal.");
+        btnZenodo.disabled = true;
+        btnIssue.disabled = true;
+        btnRefresh.disabled = true;
+        elArticlesStatus.textContent = "No data.";
+        elMembersHint.textContent = "No data.";
+        return;
+      }
+    } catch {}
 
     const [name, cover] = await Promise.all([readNameTxt(), pickCover()]);
     document.title = `${name} | Rubbish`;
@@ -525,12 +580,12 @@ DOI: ${doi}
     elCover.src = cover;
     elCover.alt = `${name} cover`;
 
-    await loadArticles();
+    await Promise.all([loadArticles(), loadMembers()]);
   }
 
   init().catch(err => {
     console.error(err);
-    setMsg("danger", "Failed to initialize journal page. Check folder name and repository public access.");
+    setMsg("danger", "Failed to initialize journal page. Check folder name and repository access.");
   });
 })();
 </script>
