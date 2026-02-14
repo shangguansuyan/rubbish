@@ -36,7 +36,6 @@
     }
     .skip:focus{left:12px}
 
-    /* Top bar */
     .topbar{
       border-bottom:1px solid var(--border);
       background:linear-gradient(180deg, #ffffff, #fbfbfe);
@@ -55,9 +54,7 @@
       background:conic-gradient(from 220deg, var(--brand), var(--brand2), #7c3aed, var(--brand));
       box-shadow:0 6px 16px rgba(10, 61, 145, .22);
     }
-    .brand-title{
-      display:flex; flex-direction:column;
-    }
+    .brand-title{display:flex; flex-direction:column}
     .brand-title strong{font-size:14px; letter-spacing:.3px}
     .brand-title span{font-size:12px; color:var(--muted)}
     .nav{
@@ -73,9 +70,7 @@
       display:flex; align-items:center; gap:10px; justify-content:flex-end;
       min-width:260px;
     }
-    .search{
-      position:relative; flex:1; min-width:170px;
-    }
+    .search{position:relative; flex:1; min-width:170px}
     .search input{
       width:100%; padding:10px 12px 10px 36px;
       border:1px solid var(--border); border-radius:12px;
@@ -99,7 +94,6 @@
       color:#fff; border-color:transparent;
     }
 
-    /* Hero */
     .hero{
       padding:26px 0 18px;
       background:
@@ -121,9 +115,7 @@
       box-shadow:var(--shadow);
       overflow:hidden;
     }
-    .hero-main{
-      padding:18px 18px 14px;
-    }
+    .hero-main{padding:18px 18px 14px}
     .kicker{
       display:inline-flex; align-items:center; gap:8px;
       font-size:12px; color:var(--muted);
@@ -142,10 +134,7 @@
       font-size:14px;
       max-width:64ch;
     }
-    .hero-meta{
-      display:flex; flex-wrap:wrap; gap:10px;
-      color:#2a3448; font-size:13px;
-    }
+    .hero-meta{display:flex; flex-wrap:wrap; gap:10px; color:#2a3448; font-size:13px}
     .pill{
       display:inline-flex; gap:8px; align-items:center;
       background:#fff;
@@ -153,15 +142,8 @@
       padding:8px 10px; border-radius:999px;
     }
     .pill b{font-family:var(--mono); font-size:12px}
-    .hero-ctas{
-      display:flex; gap:10px; flex-wrap:wrap;
-      padding:0 18px 18px;
-    }
-    .cover{
-      position:relative; height:100%;
-      min-height:280px;
-      background:#0b0f18;
-    }
+    .hero-ctas{display:flex; gap:10px; flex-wrap:wrap; padding:0 18px 18px}
+    .cover{position:relative; height:100%; min-height:280px; background:#0b0f18}
     .cover img{
       width:100%; height:100%; object-fit:cover; display:block;
       filter:saturate(1.05) contrast(1.03);
@@ -177,20 +159,11 @@
     .cover-badge strong{display:block; font-size:12px}
     .cover-badge span{display:block; font-size:12px; color:var(--muted)}
 
-    /* Sections */
     .section{padding:18px 0}
-    .section h2{
-      font-size:18px; margin:0 0 10px;
-      letter-spacing:-.2px;
-    }
-    .section .sub{
-      margin:0 0 14px; color:var(--muted); font-size:13px;
-    }
+    .section h2{font-size:18px; margin:0 0 10px; letter-spacing:-.2px}
+    .section .sub{margin:0 0 14px; color:var(--muted); font-size:13px}
 
-    .grid{
-      display:grid; gap:12px;
-      grid-template-columns: repeat(12, 1fr);
-    }
+    .grid{display:grid; gap:12px; grid-template-columns: repeat(12, 1fr)}
     .card{
       border:1px solid var(--border);
       border-radius:var(--radius);
@@ -207,37 +180,27 @@
     .card .hd strong{font-size:13px}
     .card .hd a{font-size:12px; color:var(--brand)}
     .card .bd{padding:12px 14px}
-    .list{
-      display:flex; flex-direction:column; gap:10px;
-    }
+    .list{display:flex; flex-direction:column; gap:10px}
     .item{
       border:1px dashed var(--border);
       border-radius:14px;
       padding:10px 12px;
-      background: #ffffff;
+      background:#ffffff;
     }
     .item .t{
       font-size:13px; color:#1b2436;
       display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
     .item .t em{color:var(--muted); font-style:normal; font-size:12px}
-    .item .m{
-      margin-top:6px; font-size:12px; color:var(--muted);
-    }
-    .empty{
-      color:var(--muted); font-style:italic;
-    }
+    .item .m{margin-top:6px; font-size:12px; color:var(--muted)}
+    .empty{color:var(--muted); font-style:italic}
 
-    /* Journal network */
     .network{
       background:linear-gradient(180deg, #ffffff, #fbfbfe);
       border-top:1px solid var(--border);
       border-bottom:1px solid var(--border);
     }
-    .filters{
-      display:flex; flex-wrap:wrap; gap:8px;
-      margin:10px 0 0;
-    }
+    .filters{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0}
     .chip{
       border:1px solid var(--border);
       background:#fff;
@@ -267,12 +230,8 @@
       display:flex; flex-direction:column; gap:8px;
       min-height:116px;
     }
-    .jtop{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-    }
-    .jname{
-      font-size:13px; font-weight:700; letter-spacing:.1px;
-    }
+    .jtop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+    .jname{font-size:13px; font-weight:700; letter-spacing:.1px}
     .tag{
       font-size:11px; color:var(--muted);
       border:1px solid var(--border);
@@ -288,10 +247,7 @@
       font-size:12px; color:#2a3448;
     }
     .jmeta a{color:var(--brand)}
-    .az{
-      display:flex; flex-wrap:wrap; gap:8px;
-      padding-top:6px;
-    }
+    .az{display:flex; flex-wrap:wrap; gap:8px; padding-top:6px}
     .az a{
       font-size:12px; color:#1b2436;
       padding:6px 8px; border-radius:10px;
@@ -300,17 +256,11 @@
     }
     .az a:hover{background:var(--soft); text-decoration:none}
 
-    /* Layout mapping */
     .span-8{grid-column: span 8}
     .span-4{grid-column: span 4}
     .span-6{grid-column: span 6}
-    .span-12{grid-column: span 12}
 
-    /* Footer */
-    footer{
-      padding:26px 0 34px;
-      color:var(--muted);
-    }
+    footer{padding:26px 0 34px; color:var(--muted)}
     .foot-grid{
       display:grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -318,10 +268,7 @@
       border-top:1px solid var(--border);
       padding-top:18px;
     }
-    .foot-grid h3{
-      font-size:12px; margin:0 0 10px; color:#1b2436;
-      letter-spacing:.2px;
-    }
+    .foot-grid h3{font-size:12px; margin:0 0 10px; color:#1b2436; letter-spacing:.2px}
     .foot-grid a{display:block; padding:4px 0; font-size:12px; color:var(--muted)}
     .copy{margin-top:14px; font-size:12px}
     .small{font-size:12px; color:var(--muted)}
@@ -334,7 +281,6 @@
       font-size:11px;
     }
 
-    /* Responsive */
     @media (max-width: 980px){
       .hero-grid{grid-template-columns: 1fr}
       .actions{min-width:0}
@@ -381,12 +327,8 @@
         </svg>
         <input id="q" type="search" placeholder="Search Rubbish" aria-label="Search Rubbish" />
       </div>
-      <button class="btn" id="btnSignIn" type="button" aria-label="Sign in">
-        Sign in
-      </button>
-      <a class="btn primary" href="#authors" aria-label="Submit manuscript">
-        Submit
-      </a>
+      <button class="btn" id="btnSignIn" type="button" aria-label="Sign in">Sign in</button>
+      <a class="btn primary" href="#authors" aria-label="Submit manuscript">Submit</a>
     </div>
   </div>
 </header>
@@ -395,16 +337,15 @@
   <div class="container hero-grid">
     <div class="hero-card">
       <div class="hero-main">
-        <div class="kicker" title="Site note">
+        <div class="kicker">
           <span aria-hidden="true">●</span>
           <span>Journal homepage</span>
-          <span class="kbd">GitHub-ready</span>
+          <span class="kbd">repo: rubbish</span>
         </div>
 
         <h1>Rubbish</h1>
         <p>
-          A clean, Nature-like journal landing page layout: primary navigation, cover hero,
-          latest content blocks, author resources, and a journal network.
+          期刊主页模板（Nature-like 信息架构与子刊网络）。文章标题不编写：无内容处保持为空或“（空）”。
         </p>
 
         <div class="hero-meta" aria-label="Journal quick facts">
@@ -423,7 +364,6 @@
     </div>
 
     <aside class="hero-card cover" aria-label="Journal cover">
-      <!-- 封面图：使用项目内已上传图片 -->
       <img src="g3pip2k-1771080298817-192c9531.jpg" alt="Rubbish journal cover" />
       <div class="cover-badge">
         <strong>Cover</strong>
@@ -435,39 +375,25 @@
 
 <main id="main" class="container" role="main">
 
-  <!-- Latest -->
   <section id="latest" class="section" aria-label="Latest content">
     <h2>Latest</h2>
     <p class="sub">不编文章标题：如果没有内容，保持为空或显示“（空）”。</p>
 
     <div class="grid">
       <div class="card span-8" aria-label="Latest Research">
-        <div class="hd">
-          <strong>Research</strong>
-          <a href="#" aria-label="View all research">View all</a>
-        </div>
+        <div class="hd"><strong>Research</strong><a href="#" aria-label="View all research">View all</a></div>
         <div class="bd">
-          <div class="list" id="latestResearch">
-            <!-- 留空，不编标题 -->
+          <div class="list">
             <div class="item">
-              <div class="t">
-                <span class="empty">（空）</span>
-                <em>Article</em>
-              </div>
+              <div class="t"><span class="empty">（空）</span><em>Article</em></div>
               <div class="m">Authors: <span class="empty">（空）</span> · Published: <span class="empty">（空）</span></div>
             </div>
             <div class="item">
-              <div class="t">
-                <span class="empty">（空）</span>
-                <em>Letter</em>
-              </div>
+              <div class="t"><span class="empty">（空）</span><em>Letter</em></div>
               <div class="m">Authors: <span class="empty">（空）</span> · Published: <span class="empty">（空）</span></div>
             </div>
             <div class="item">
-              <div class="t">
-                <span class="empty">（空）</span>
-                <em>Analysis</em>
-              </div>
+              <div class="t"><span class="empty">（空）</span><em>Analysis</em></div>
               <div class="m">Authors: <span class="empty">（空）</span> · Published: <span class="empty">（空）</span></div>
             </div>
           </div>
@@ -475,24 +401,15 @@
       </div>
 
       <div class="card span-4" aria-label="In Focus">
-        <div class="hd">
-          <strong>In Focus</strong>
-          <a href="#" aria-label="View all highlights">View all</a>
-        </div>
+        <div class="hd"><strong>In Focus</strong><a href="#" aria-label="View all highlights">View all</a></div>
         <div class="bd">
           <div class="list">
             <div class="item">
-              <div class="t">
-                <span class="empty">（空）</span>
-                <em>Editorial</em>
-              </div>
+              <div class="t"><span class="empty">（空）</span><em>Editorial</em></div>
               <div class="m">Short summary: <span class="empty">（空）</span></div>
             </div>
             <div class="item">
-              <div class="t">
-                <span class="empty">（空）</span>
-                <em>Perspective</em>
-              </div>
+              <div class="t"><span class="empty">（空）</span><em>Perspective</em></div>
               <div class="m">Short summary: <span class="empty">（空）</span></div>
             </div>
           </div>
@@ -500,10 +417,7 @@
       </div>
 
       <div class="card span-6" id="news" aria-label="News & Views">
-        <div class="hd">
-          <strong>News &amp; Views</strong>
-          <a href="#" aria-label="View all news and views">View all</a>
-        </div>
+        <div class="hd"><strong>News &amp; Views</strong><a href="#" aria-label="View all news and views">View all</a></div>
         <div class="bd">
           <div class="list">
             <div class="item">
@@ -519,10 +433,7 @@
       </div>
 
       <div class="card span-6" id="collections" aria-label="Collections">
-        <div class="hd">
-          <strong>Collections</strong>
-          <a href="#" aria-label="View all collections">View all</a>
-        </div>
+        <div class="hd"><strong>Collections</strong><a href="#" aria-label="View all collections">View all</a></div>
         <div class="bd">
           <div class="list">
             <div class="item">
@@ -540,7 +451,6 @@
     </div>
   </section>
 
-  <!-- For Authors -->
   <section id="authors" class="section" aria-label="For Authors">
     <h2>For Authors</h2>
     <p class="sub">投稿入口、指南、政策信息（内容可后续替换）。</p>
@@ -597,11 +507,10 @@
     </div>
   </section>
 
-  <!-- Journal Network (Nature-like sub-journals) -->
   <section id="network" class="section network" aria-label="Journal network">
     <div class="container">
       <h2>Rubbish Journals</h2>
-      <p class="sub">类似 Nature 的“子刊网络”：按领域筛选与浏览（名称为示例，不使用 Nature 的真实刊名）。</p>
+      <p class="sub">像 Nature 那样的“子刊网络”（名称为内部子刊示例）。</p>
 
       <div class="filters" role="toolbar" aria-label="Filter journals">
         <button class="chip" type="button" aria-pressed="true" data-filter="all">All</button>
@@ -613,101 +522,52 @@
       </div>
 
       <div class="journal-grid" id="journalGrid">
-        <!-- 子刊卡片（示例） -->
         <article class="jcard" data-tags="multidisciplinary">
-          <div class="jtop">
-            <div class="jname">Rubbish</div>
-            <span class="tag">Flagship</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish</div><span class="tag">Flagship</span></div>
           <p class="jdesc">The flagship journal covering broad topics.</p>
-          <div class="jmeta">
-            <span>Open access: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Open access: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="multidisciplinary,data">
-          <div class="jtop">
-            <div class="jname">Rubbish Communications</div>
-            <span class="tag">Multidisciplinary</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Communications</div><span class="tag">Multidisciplinary</span></div>
           <p class="jdesc">Short-format communications across disciplines.</p>
-          <div class="jmeta">
-            <span>APC: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>APC: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="life,data">
-          <div class="jtop">
-            <div class="jname">Rubbish Biology</div>
-            <span class="tag">Life</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Biology</div><span class="tag">Life</span></div>
           <p class="jdesc">Molecular, cellular and systems biology.</p>
-          <div class="jmeta">
-            <span>Scope: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Scope: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="medicine,life">
-          <div class="jtop">
-            <div class="jname">Rubbish Medicine</div>
-            <span class="tag">Medicine</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Medicine</div><span class="tag">Medicine</span></div>
           <p class="jdesc">Clinical and translational research.</p>
-          <div class="jmeta">
-            <span>Trials: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Trials: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="engineering">
-          <div class="jtop">
-            <div class="jname">Rubbish Engineering</div>
-            <span class="tag">Engineering</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Engineering</div><span class="tag">Engineering</span></div>
           <p class="jdesc">Devices, materials and applied systems.</p>
-          <div class="jmeta">
-            <span>Review time: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Review time: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="data">
-          <div class="jtop">
-            <div class="jname">Rubbish Methods</div>
-            <span class="tag">Methods</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Methods</div><span class="tag">Methods</span></div>
           <p class="jdesc">Tools, protocols, and computational methods.</p>
-          <div class="jmeta">
-            <span>Code: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Code: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="life,medicine,data">
-          <div class="jtop">
-            <div class="jname">Rubbish Immunology</div>
-            <span class="tag">Life/Med</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Immunology</div><span class="tag">Life/Med</span></div>
           <p class="jdesc">Immunity, inflammation and host defense.</p>
-          <div class="jmeta">
-            <span>Editors: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Editors: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
 
         <article class="jcard" data-tags="multidisciplinary">
-          <div class="jtop">
-            <div class="jname">Rubbish Reviews</div>
-            <span class="tag">Reviews</span>
-          </div>
+          <div class="jtop"><div class="jname">Rubbish Reviews</div><span class="tag">Reviews</span></div>
           <p class="jdesc">Authoritative reviews and perspectives.</p>
-          <div class="jmeta">
-            <span>Invited: <span class="empty">（空）</span></span>
-            <a href="#top">Visit</a>
-          </div>
+          <div class="jmeta"><span>Invited: <span class="empty">（空）</span></span><a href="#top">Visit</a></div>
         </article>
       </div>
 
@@ -728,7 +588,6 @@
     </div>
   </section>
 
-  <!-- About -->
   <section id="about" class="section" aria-label="About">
     <h2>About Rubbish</h2>
     <p class="sub">关于页面占位：可替换为宗旨、范围、编辑部信息、联系邮箱等。</p>
@@ -736,11 +595,7 @@
     <div class="grid">
       <div class="card span-8" aria-label="Aims & scope">
         <div class="hd"><strong>Aims &amp; scope</strong><a href="#">Open</a></div>
-        <div class="bd">
-          <p class="small" style="margin:0;">
-            <span class="empty">（空）</span>
-          </p>
-        </div>
+        <div class="bd"><p class="small" style="margin:0;"><span class="empty">（空）</span></p></div>
       </div>
 
       <div class="card span-4" aria-label="Contact">
@@ -797,10 +652,8 @@
 </footer>
 
 <script>
-  // 年份
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // 搜索框：演示用（不联网、不生成内容）
   const q = document.getElementById("q");
   q.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -809,7 +662,6 @@
     }
   });
 
-  // 子刊筛选
   const chips = Array.from(document.querySelectorAll(".chip"));
   const cards = Array.from(document.querySelectorAll("#journalGrid .jcard"));
 
@@ -817,15 +669,14 @@
     chips.forEach(c => c.setAttribute("aria-pressed", "false"));
     btn.setAttribute("aria-pressed", "true");
   }
-
   function applyFilter(filter){
     cards.forEach(card => {
-      const tags = (card.getAttribute("data-tags") || "").split(",").map(s => s.trim()).filter(Boolean);
+      const tags = (card.getAttribute("data-tags") || "")
+        .split(",").map(s => s.trim()).filter(Boolean);
       const show = (filter === "all") || tags.includes(filter);
       card.style.display = show ? "flex" : "none";
     });
   }
-
   chips.forEach(btn => {
     btn.addEventListener("click", () => {
       const f = btn.getAttribute("data-filter");
