@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rubbish — Editorial Board</title>
+  <meta name="description" content="Rubbish Editorial Board." />
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111111;
+      --muted:#5a5a5a;
+      --border:#e8e8e8;
+      --card:#fafafa;
+      --btn:#111;
+      --btnText:#fff;
+      --btn2:#fff;
+      --btn2Text:#111;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --radius: 16px;
+      --max: 980px;
+      --link:#0a58ca;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.6;
+    }
+    a{ color:var(--link); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .topbar{
+      border-bottom:1px solid var(--border);
+      position:sticky; top:0; background:rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      z-index:20;
+    }
+    .wrap{ max-width:var(--max); margin:0 auto; padding:14px 18px; }
+    .row{ display:flex; gap:14px; align-items:center; justify-content:space-between; }
+    .brand{ display:flex; gap:12px; align-items:center; }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, #111, #444);
+      box-shadow: var(--shadow);
+    }
+    .brand h1{ font-size:18px; margin:0; }
+    .nav{
+      display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+    }
+    .nav a{
+      color:var(--text);
+      font-size:14px;
+      padding:8px 10px;
+      border-radius:10px;
+    }
+    .nav a:hover{ background:#f3f3f3; text-decoration:none; }
+
+    .btn{
+      border:1px solid var(--btn);
+      background:var(--btn);
+      color:var(--btnText);
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:14px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn.secondary{
+      background:var(--btn2);
+      color:var(--btn2Text);
+      border:1px solid var(--border);
+    }
+
+    main{ max-width:var(--max); margin: 18px auto 0; padding: 0 18px 26px; }
+    .card{
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    .kicker{ font-size:12px; color:var(--muted); letter-spacing:.14em; text-transform:uppercase; }
+    h2{ margin:8px 0 6px; font-size:28px; letter-spacing:-.02em; }
+    p{ margin: 8px 0; color:var(--muted); font-size:14px; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    .box{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      padding:14px;
+    }
+    .box h3{ margin:0 0 8px; font-size:16px; color:var(--text); }
+    .box .empty{ color:var(--muted); font-size:13px; }
+
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="row">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <h1>Rubbish</h1>
+        </div>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="journal.html">Journal</a>
+          <a href="articles.html">All articles</a>
+          <a href="editorial-board.html">Editorial Board</a>
+        </nav>
+
+        <div>
+          <button id="btnJoin" class="btn" type="button">Join</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="kicker">Editorial Board</div>
+      <h2>Editorial Board</h2>
+      <p>
+        This page is intentionally minimal. You can later populate editor names, roles, affiliations, and contact policy.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Editor-in-Chief</h3>
+          <div class="empty">(empty)</div>
+        </div>
+        <div class="box">
+          <h3>Managing Editor</h3>
+          <div class="empty">(empty)</div>
+        </div>
+        <div class="box">
+          <h3>Associate Editors</h3>
+          <div class="empty">(empty)</div>
+        </div>
+        <div class="box">
+          <h3>Advisory Board</h3>
+          <div class="empty">(empty)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="join" style="margin-top:14px;">
+      <div class="kicker">Join</div>
+      <h2>Join the Editorial Board</h2>
+      <p>(empty)</p>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <button id="btnIssue" class="btn secondary" type="button">Apply via GitHub Issue</button>
+        <button id="btnBack" class="btn" type="button">Back to Home</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Join button scroll
+    document.getElementById("btnJoin").addEventListener("click", () => {
+      location.hash = "#join";
+    });
+
+    // Placeholder: create an issue link (you can change repo path)
+    document.getElementById("btnIssue").addEventListener("click", () => {
+      // 你可以把这里替换成你希望收集申请的 issue 模板链接
+      // 当前指向 rubbish 仓库的新建 issue（手动填写）
+      location.href = "https://github.com/shangguansuyan/rubbish/issues/new";
+    });
+
+    document.getElementById("btnBack").addEventListener("click", () => {
+      location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
