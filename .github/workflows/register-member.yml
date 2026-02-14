@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Parse issue body
+      - name: Parse issue body to outputs
         id: parse
         shell: bash
         run: |
@@ -26,7 +26,6 @@ jobs:
           get_field () {
             local key="$1"
             echo "$body" | awk -v k="$key" '
-              BEGIN{IGNORECASE=0}
               $0 ~ "^"k":[ ]*" {
                 sub("^"k":[ ]*", "", $0);
                 print $0;
@@ -34,72 +33,36 @@ jobs:
               }'
           }
 
-          NAME="$(get_field 'NAME')"
-          EMAIL="$(get_field 'EMAIL')"
-          AFFILIATIONS_RAW="$(get_field 'AFFILIATIONS')"
-          ROLE="$(get_field 'ROLE')"
-          INTERESTS="$(get_field 'INTERESTS')"
-          ORCID="$(get_field 'ORCID')"
+          echo "NAME=$(get_field 'NAME')" >> "$GITHUB_OUTPUT"
+          echo "EMAIL=$(get_field 'EMAIL')" >> "$GITHUB_OUTPUT"
+          echo "AFFILIATIONS_RAW=$(get_field 'AFFILIATIONS')" >> "$GITHUB_OUTPUT"
+          echo "ROLE=$(get_field 'ROLE')" >> "$GITHUB_OUTPUT"
+          echo "INTERESTS=$(get_field 'INTERESTS')" >> "$GITHUB_OUTPUT"
+          echo "ORCID=$(get_field 'ORCID')" >> "$GITHUB_OUTPUT"
 
-          # required checks
+      - name: Validate required fields
+        shell: bash
+        run: |
+          NAME="${{ steps.parse.outputs.NAME }}"
+          EMAIL="${{ steps.parse.outputs.EMAIL }}"
+          AFFILIATIONS_RAW="${{ steps.parse.outputs.AFFILIATIONS_RAW }}"
+          ROLE="${{ steps.parse.outputs.ROLE }}"
+          INTERESTS="${{ steps.parse.outputs.INTERESTS }}"
+          ORCID="${{ steps.parse.outputs.ORCID }}"
+
           if [ -z "$NAME" ] || [ -z "$EMAIL" ] || [ -z "$AFFILIATIONS_RAW" ] || [ -z "$ROLE" ] || [ -z "$INTERESTS" ] || [ -z "$ORCID" ]; then
             echo "Missing required fields. Refusing to write."
+            echo "NAME=$NAME"
+            echo "EMAIL=$EMAIL"
+            echo "AFFILIATIONS=$AFFILIATIONS_RAW"
+            echo "ROLE=$ROLE"
+            echo "INTERESTS=$INTERESTS"
+            echo "ORCID=$ORCID"
             exit 1
           fi
 
-          # affiliations: split by " | " into JSON array
-          python - << 'PY'
-import json, os
-name = os.environ["NAME"]
-email = os.environ["EMAIL"]
-aff_raw = os.environ["AFFILIATIONS_RAW"]
-role = os.environ["ROLE"]
-interests = os.environ["INTERESTS"]
-orcid = os.environ["ORCID"]
-
-affs = [a.strip() for a in aff_raw.split("|")]
-affs = [a for a in affs if a]
-
-member = {
-  "name": name.strip(),
-  "email": email.strip(),
-  "affiliations": affs,
-  "role": role.strip(),
-  "interests": interests.strip(),
-  "orcid": orcid.strip()
-}
-
-path = "members.json"
-if os.path.exists(path):
-  with open(path, "r", encoding="utf-8") as f:
-    try:
-      data = json.load(f)
-    except Exception:
-      data = []
-else:
-  data = []
-
-if not isinstance(data, list):
-  data = []
-
-# de-duplication heuristic: same ORCID overwrites
-out = []
-replaced = False
-for x in data:
-  if isinstance(x, dict) and x.get("orcid","").strip() == member["orcid"]:
-    out.append(member)
-    replaced = True
-  else:
-    out.append(x)
-
-if not replaced:
-  out.append(member)
-
-with open(path, "w", encoding="utf-8") as f:
-  json.dump(out, f, ensure_ascii=False, indent=2)
-
-print("Wrote members.json; size =", len(out))
-PY
+      - name: Update members.json
+        shell: bash
         env:
           NAME: ${{ steps.parse.outputs.NAME }}
           EMAIL: ${{ steps.parse.outputs.EMAIL }}
@@ -107,88 +70,65 @@ PY
           ROLE: ${{ steps.parse.outputs.ROLE }}
           INTERESTS: ${{ steps.parse.outputs.INTERESTS }}
           ORCID: ${{ steps.parse.outputs.ORCID }}
-
-      - name: Re-parse for env export
-        id: parse2
-        shell: bash
-        run: |
-          body="${{ github.event.issue.body }}"
-          get_field () {
-            local key="$1"
-            echo "$body" | awk -v k="$key" '
-              BEGIN{IGNORECASE=0}
-              $0 ~ "^"k":[ ]*" {
-                sub("^"k":[ ]*", "", $0);
-                print $0;
-                exit
-              }'
-          }
-          echo "NAME=$(get_field 'NAME')" >> $GITHUB_OUTPUT
-          echo "EMAIL=$(get_field 'EMAIL')" >> $GITHUB_OUTPUT
-          echo "AFFILIATIONS_RAW=$(get_field 'AFFILIATIONS')" >> $GITHUB_OUTPUT
-          echo "ROLE=$(get_field 'ROLE')" >> $GITHUB_OUTPUT
-          echo "INTERESTS=$(get_field 'INTERESTS')" >> $GITHUB_OUTPUT
-          echo "ORCID=$(get_field 'ORCID')" >> $GITHUB_OUTPUT
-
-      - name: Write members.json
-        shell: bash
         run: |
           python - << 'PY'
-import json, os
-name = os.environ["NAME"]
-email = os.environ["EMAIL"]
-aff_raw = os.environ["AFFILIATIONS_RAW"]
-role = os.environ["ROLE"]
-interests = os.environ["INTERESTS"]
-orcid = os.environ["ORCID"]
+          import json, os
 
-affs = [a.strip() for a in aff_raw.split("|")]
-affs = [a for a in affs if a]
+          name = os.environ["NAME"].strip()
+          email = os.environ["EMAIL"].strip()
+          aff_raw = os.environ["AFFILIATIONS_RAW"].strip()
+          role = os.environ["ROLE"].strip()
+          interests = os.environ["INTERESTS"].strip()
+          orcid = os.environ["ORCID"].strip()
 
-member = {
-  "name": name.strip(),
-  "email": email.strip(),
-  "affiliations": affs,
-  "role": role.strip(),
-  "interests": interests.strip(),
-  "orcid": orcid.strip()
-}
+          # 支持两种：用 " | " 分隔 或 用换行分隔
+          if " | " in aff_raw:
+            affs = [a.strip() for a in aff_raw.split("|")]
+          else:
+            affs = [a.strip() for a in aff_raw.splitlines()]
 
-path = "members.json"
-if os.path.exists(path):
-  with open(path, "r", encoding="utf-8") as f:
-    try:
-      data = json.load(f)
-    except Exception:
-      data = []
-else:
-  data = []
+          affs = [a for a in affs if a]
 
-if not isinstance(data, list):
-  data = []
+          member = {
+            "name": name,
+            "email": email,
+            "affiliations": affs,
+            "role": role,
+            "interests": interests,
+            "orcid": orcid
+          }
 
-out = []
-replaced = False
-for x in data:
-  if isinstance(x, dict) and x.get("orcid","").strip() == member["orcid"]:
-    out.append(member)
-    replaced = True
-  else:
-    out.append(x)
+          path = "members.json"
+          if os.path.exists(path):
+            try:
+              with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            except Exception:
+              data = []
+          else:
+            data = []
 
-if not replaced:
-  out.append(member)
+          if not isinstance(data, list):
+            data = []
 
-with open(path, "w", encoding="utf-8") as f:
-  json.dump(out, f, ensure_ascii=False, indent=2)
-PY
-        env:
-          NAME: ${{ steps.parse2.outputs.NAME }}
-          EMAIL: ${{ steps.parse2.outputs.EMAIL }}
-          AFFILIATIONS_RAW: ${{ steps.parse2.outputs.AFFILIATIONS_RAW }}
-          ROLE: ${{ steps.parse2.outputs.ROLE }}
-          INTERESTS: ${{ steps.parse2.outputs.INTERESTS }}
-          ORCID: ${{ steps.parse2.outputs.ORCID }}
+          # ORCID 去重：同 ORCID 覆盖
+          out = []
+          replaced = False
+          for x in data:
+            if isinstance(x, dict) and str(x.get("orcid", "")).strip() == orcid:
+              out.append(member)
+              replaced = True
+            else:
+              out.append(x)
+
+          if not replaced:
+            out.append(member)
+
+          with open(path, "w", encoding="utf-8") as f:
+            json.dump(out, f, ensure_ascii=False, indent=2)
+
+          print("members.json updated, size =", len(out))
+          PY
 
       - name: Commit & push
         shell: bash
