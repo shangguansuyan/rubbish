@@ -2,238 +2,385 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rubbish — Journal</title>
-  <meta name="description" content="Rubbish journal page." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Journal</title>
 
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#111111;
-      --muted:#5a5a5a;
-      --border:#e8e8e8;
-      --card:#fafafa;
-      --btn:#111;
-      --btnText:#fff;
-      --btn2:#fff;
-      --btn2Text:#111;
-      --shadow: 0 10px 30px rgba(0,0,0,.06);
-      --radius: 16px;
-      --max: 1180px;
-      --link:#0a58ca;
+      --bg:#ffffff; --fg:#111111; --muted:#5b5b5b; --line:#e7e7e7; --chip:#f4f4f4;
+      --link:#0b57d0; --max:1160px; --radius:16px; --shadow:0 18px 44px rgba(0,0,0,.08);
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      color:var(--text);
-      background:var(--bg);
-      line-height:1.5;
-    }
-    a{ color:var(--link); text-decoration:none; }
-    a:hover{ text-decoration:underline; }
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Helvetica Neue",Helvetica,sans-serif;color:var(--fg);background:var(--bg)}
+    a{color:var(--link);text-decoration:none} a:hover{text-decoration:underline}
+    header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px 18px;}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .crumbs{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+    .crumbs a{color:inherit}
+    .brand{font-weight:900;color:#111}
 
-    .topbar{
-      border-bottom:1px solid var(--border);
-      position:sticky; top:0; background:rgba(255,255,255,.92);
-      backdrop-filter: blur(10px);
-      z-index:20;
-    }
-    .wrap{ max-width:var(--max); margin:0 auto; padding:14px 18px; }
-    .row{ display:flex; gap:14px; align-items:center; justify-content:space-between; }
-    .brand{ display:flex; gap:12px; align-items:center; }
-    .logo{
-      width:34px; height:34px; border-radius:10px;
-      background: linear-gradient(135deg, #111, #444);
-      box-shadow: var(--shadow);
-    }
-    .brand h1{ font-size:18px; margin:0; }
-    .nav{
-      display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center;
-    }
-    .nav a{
-      color:var(--text);
-      font-size:14px;
-      padding:8px 10px;
-      border-radius:10px;
-    }
-    .nav a:hover{ background:#f3f3f3; text-decoration:none; }
+    .btn{border:1px solid #111;background:#111;color:#fff;padding:10px 12px;border-radius:999px;font-size:13px;cursor:pointer;white-space:nowrap}
+    .btn.secondary{border:1px solid var(--line);background:#fff;color:#111}
+    .btn:active{transform:translateY(1px)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
 
-    .actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
-    .btn{
-      border:1px solid var(--btn);
-      background:var(--btn);
-      color:var(--btnText);
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:14px;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .btn.secondary{
-      background:var(--btn2);
-      color:var(--btn2Text);
-      border:1px solid var(--border);
-    }
-    .btn:hover{ filter:brightness(0.95); }
-    .btn:active{ transform: translateY(1px); }
+    .hero{display:grid;grid-template-columns:360px 1fr;gap:18px;padding:20px 0 10px;border-bottom:1px solid var(--line)}
+    @media (max-width: 920px){ .hero{grid-template-columns:1fr;} }
+    .cover{width:100%;aspect-ratio:4/3;border:1px solid var(--line);border-radius:var(--radius);object-fit:cover;background:#f6f6f6}
+    h1{margin:0 0 8px;font-size:34px;letter-spacing:-.4px;font-weight:950}
+    .desc{margin:0;color:var(--muted);line-height:1.75;font-size:14.5px;max-width:840px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .pill{font-size:12px;padding:6px 10px;border-radius:999px;background:var(--chip);border:1px solid var(--line);color:#333;white-space:nowrap}
 
-    .hero{
-      max-width:var(--max);
-      margin: 18px auto 0;
-      padding: 0 18px;
-    }
-    .heroCard{
-      border:1px solid var(--border);
-      background:var(--card);
-      border-radius: var(--radius);
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      padding: 18px;
-    }
-    .kicker{ font-size:12px; color:var(--muted); letter-spacing:.14em; text-transform:uppercase; }
-    .title{ margin:10px 0 6px; font-size:28px; letter-spacing:-.02em; }
-    .subtitle{ margin:0; color:var(--muted); font-size:14px; }
+    .content{display:grid;grid-template-columns:1fr 420px;gap:18px;padding:18px 0 38px;align-items:start}
+    @media (max-width: 1020px){ .content{grid-template-columns:1fr;} }
+    .panel{border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:#fff}
+    .panel.soft{box-shadow:var(--shadow);border-color:rgba(0,0,0,.06)}
+    .panel h2{margin:0 0 10px;font-size:16px;letter-spacing:.1px}
+    .muted{color:var(--muted);font-size:12.8px;line-height:1.65}
+    .hr{height:1px;background:var(--line);margin:12px 0}
 
-    .section{ max-width:var(--max); margin: 14px auto 0; padding: 0 18px 26px; }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-      margin-top: 14px;
-    }
-    .card{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      background:#fff;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card .pad{ padding: 16px; }
-    .card h3{ margin:0 0 8px; font-size:16px; }
-    .card p{ margin:0; color:var(--muted); font-size:13px; }
+    .articles{display:flex;flex-direction:column;gap:12px}
+    .article{border:1px solid var(--line);border-radius:var(--radius);padding:12px;background:#fff}
+    .article h3{margin:0 0 6px;font-size:15px;line-height:1.35;font-weight:850}
+    .article .meta{margin:0;color:var(--muted);font-size:12.6px;line-height:1.55}
+    .doi{display:inline-flex;align-items:center;gap:8px;margin-top:8px}
+    .doi a{display:inline-block;border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:999px;font-size:12.5px;text-decoration:none}
+    .doi a:hover{border-color:#cfcfcf;text-decoration:none}
 
-    .col-6{ grid-column: span 6; }
-    .col-12{ grid-column: span 12; }
+    label{display:block;font-size:12px;color:#333;margin:10px 0 6px}
+    input, textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;font-size:14px;outline:none}
+    textarea{min-height:86px;resize:vertical}
 
-    .footer{
-      border-top:1px solid var(--border);
-      color:var(--muted);
-      font-size:12px;
-      padding: 18px;
-      max-width:var(--max);
-      margin: 0 auto 22px;
-    }
+    .danger{color:#b00020;font-size:12.6px;line-height:1.45;margin-top:8px;white-space:pre-wrap}
+    .ok{color:#0b7a2a;font-size:12.6px;line-height:1.45;margin-top:8px;white-space:pre-wrap}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px}
 
-    @media (max-width: 980px){
-      .col-6{ grid-column: span 12; }
+    @media (min-width: 1021px){
+      .sticky{position:sticky;top:74px}
     }
   </style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="wrap">
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="crumbs">
+        <a href="index.html" class="brand">Rubbish</a>
+        <span>›</span>
+        <span id="crumbJournal">Journal</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button id="btnAll" class="btn secondary" type="button">View all articles</button>
+        <button id="btnZenodo" class="btn" type="button">Submit via Zenodo</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <img id="cover" class="cover" alt="Journal cover" />
+    <div>
+      <h1 id="title">Journal</h1>
+      <p class="desc">
+        This journal publishes transparent, method-anchored records of boundary findings, including negative results,
+        informative failures, and reproducible anomalies that merit careful documentation and scholarly discussion.
+      </p>
       <div class="row">
-        <div class="brand">
-          <div class="logo" aria-hidden="true"></div>
-          <h1 id="brandTitle">Rubbish</h1>
-        </div>
+        <span class="pill">Open access</span>
+        <span class="pill">Methods & reproducibility</span>
+        <span class="pill">Rubbish series</span>
+      </div>
+    </div>
+  </section>
 
-        <nav class="nav" aria-label="Primary">
-          <a href="index.html">Home</a>
-          <a href="journal.html">Journal</a>
-          <a id="navAllArticles" href="articles.html">All articles</a>
-          <a href="editorial-board.html">Editorial Board</a>
-        </nav>
+  <section class="content">
+    <div>
+      <div class="panel">
+        <h2>Aims & Scope</h2>
+        <p class="muted">
+          The Rubbish series provides a structured venue for results that are frequently underrepresented despite high scientific value:
+          (i) negative results and null findings obtained under well-controlled conditions; (ii) failed experiments whose protocols,
+          constraints, and troubleshooting paths carry transferable methodological insight; (iii) reproducible anomalous observations
+          that are statistically credible yet difficult to reconcile with prevailing models; and (iv) short laboratory reports describing
+          unusual, surprising, or “mind-shifting” phenomena observed during routine research, provided the reporting remains transparent,
+          method-anchored, and non-speculative.
+        </p>
 
-        <!-- ✅ 关键：所有文章按钮 + Zenodo 提交按钮 -->
-        <div class="actions">
-          <button id="btnAll" class="btn secondary" type="button">View all articles</button>
-          <button id="btnZenodo" class="btn" type="button">Submit via Zenodo</button>
+        <div class="hr"></div>
+
+        <h2>Latest articles</h2>
+        <p class="muted" style="margin-top:-4px;">Showing the most recent 6 records. Use “View all articles” for the complete index.</p>
+
+        <div id="articles" class="articles" aria-live="polite" style="margin-top:10px;"></div>
+        <p id="articlesStatus" class="muted" style="margin-top:10px;">Loading…</p>
+
+        <div style="margin-top:12px;">
+          <button id="btnAll2" class="btn secondary" type="button">View all articles</button>
         </div>
       </div>
     </div>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="heroCard">
-        <div class="kicker">Journal</div>
-        <h2 class="title" id="pageTitle">Rubbish</h2>
-        <p class="subtitle" id="pageSubtitle">Sub-journal content is determined by the <code>?j=</code> query parameter.</p>
+    <aside class="sticky">
+      <div class="panel soft">
+        <h2>Submission</h2>
+        <p class="muted">
+          Upload your PDF to Zenodo to obtain a DOI, then return here to register the required metadata.
+          Registration is performed by submitting a GitHub Issue (no GitHub token required). A workflow will validate the fields and
+          append the record to <b>article.txt</b> for live indexing.
+        </p>
+
+        <div class="hr"></div>
+
+        <label>Title (required)</label>
+        <textarea id="fTitle" placeholder="Article title"></textarea>
+
+        <label>Authors (required)</label>
+        <textarea id="fAuthors" placeholder="Author list (e.g., A. Smith; B. Lee)"></textarea>
+
+        <label>Affiliations (required)</label>
+        <textarea id="fAff" placeholder="Institution(s)"></textarea>
+
+        <label>ORCID (required)</label>
+        <input id="fOrcid" type="text" placeholder="e.g., 0000-0002-1825-0097" />
+
+        <label>DOI (required)</label>
+        <input id="fDoi" type="text" placeholder="e.g., 10.5281/zenodo.1234567" />
+
+        <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+          <button id="btnIssue" class="btn" type="button">Open Issue Draft</button>
+          <button id="btnRefresh" class="btn secondary" type="button">Refresh list</button>
+        </div>
+
+        <p id="msg" class="muted" style="margin-top:10px;"></p>
+
+        <div class="hr"></div>
+        <p class="muted">Required issue-body format (auto-generated):</p>
+        <pre class="mono" style="margin:8px 0 0; background:#fafafa; border:1px solid var(--line); padding:10px; border-radius:12px; overflow:auto;">JOURNAL_FOLDER: &lt;folder&gt;
+TITLE: &lt;title&gt;
+AUTHORS: &lt;authors&gt;
+AFFILIATIONS: &lt;affiliations&gt;
+ORCID: &lt;orcid&gt;
+DOI: &lt;doi&gt;</pre>
       </div>
-    </section>
+    </aside>
+  </section>
+</main>
 
-    <section class="section">
-      <div class="grid">
-        <article class="card col-12">
-          <div class="pad">
-            <h3>Scope</h3>
-            <p>(empty)</p>
+<script>
+(() => {
+  const OWNER="shangguansuyan", REPO="rubbish", BRANCH="main";
+  const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+
+  const qs = new URLSearchParams(location.search);
+  const folder = qs.get("j") || "";
+
+  const elTitle = document.getElementById("title");
+  const elCrumb = document.getElementById("crumbJournal");
+  const elCover = document.getElementById("cover");
+
+  const elArticles = document.getElementById("articles");
+  const elArticlesStatus = document.getElementById("articlesStatus");
+
+  const elMsg = document.getElementById("msg");
+
+  const elFTitle = document.getElementById("fTitle");
+  const elFAuthors = document.getElementById("fAuthors");
+  const elFAff = document.getElementById("fAff");
+  const elFOrcid = document.getElementById("fOrcid");
+  const elFDoi = document.getElementById("fDoi");
+
+  const btnZenodo = document.getElementById("btnZenodo");
+  const btnIssue = document.getElementById("btnIssue");
+  const btnRefresh = document.getElementById("btnRefresh");
+
+  const btnAll = document.getElementById("btnAll");
+  const btnAll2 = document.getElementById("btnAll2");
+
+  if(!folder){
+    elTitle.textContent = "Journal";
+    elCrumb.textContent = "Journal";
+    elArticlesStatus.textContent = "Invalid journal link.";
+    btnZenodo.disabled = true;
+    btnIssue.disabled = true;
+    btnRefresh.disabled = true;
+    btnAll.disabled = true;
+    btnAll2.disabled = true;
+    return;
+  }
+
+  const esc = (s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  const isImage = (name)=>/\.(png|jpe?g|webp|gif)$/i.test(name);
+
+  function setMsg(kind, text){
+    elMsg.className = kind==="ok" ? "ok" : (kind==="danger" ? "danger" : "muted");
+    elMsg.textContent = text || "";
+  }
+
+  function normalizeDoi(input){
+    const s = (input||"").trim();
+    if(!s) return "";
+    if(/^10\./.test(s)) return s.replace(/[)\],.]+$/,"");
+    const m = s.match(/10\.\d{4,9}\/\S+/);
+    return m ? m[0].replace(/[)\],.]+$/,"") : s;
+  }
+  function doiLink(doi){
+    const d = normalizeDoi(doi);
+    return `https://doi.org/${encodeURIComponent(d)}`;
+  }
+
+  async function fetchJSON(url){
+    const res = await fetch(url, { headers:{ "Accept":"application/vnd.github+json" }});
+    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    return await res.json();
+  }
+
+  async function readNameTxt(){
+    const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
+    if(item && item.content){
+      return atob(item.content.replace(/\n/g,"")).trim() || folder;
+    }
+    return folder;
+  }
+
+  async function pickCover(){
+    try{
+      const items = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}?ref=${encodeURIComponent(BRANCH)}`);
+      const hasName = items.some(x=>x.type==="file" && x.name==="name.txt");
+      if(!hasName) return "";
+      const images = items.filter(x=>x.type==="file" && isImage(x.name)).sort((a,b)=>a.name.localeCompare(b.name));
+      if(images.length) return images[0].download_url;
+    } catch {}
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
+        <rect width='100%' height='100%' fill='#f2f2f2'/>
+        <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
+          font-family='Arial' font-size='22' fill='#777'>No cover image</text>
+      </svg>`
+    )}`;
+  }
+
+  function parseJSONL(text){
+    const lines = text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    const out = [];
+    for(const ln of lines){
+      try{ out.push(JSON.parse(ln)); } catch {}
+    }
+    out.sort((a,b)=> (b.ts||0) - (a.ts||0));
+    return out;
+  }
+
+  function renderLatest6(list){
+    const latest = list.slice(0,6);
+    elArticles.innerHTML = latest.map(a=>{
+      const title = esc(a.title || "Untitled");
+      const authors = esc(a.authors || "");
+      const aff = esc(a.affiliations || "");
+      const orcid = esc(a.orcid || "");
+      const doi = esc(a.doi || "");
+      const link = doi ? doiLink(doi) : "";
+      return `
+        <div class="article">
+          <h3>${title}</h3>
+          <p class="meta"><b>Authors:</b> ${authors || "—"}</p>
+          <p class="meta"><b>Affiliations:</b> ${aff || "—"}</p>
+          <p class="meta"><b>ORCID:</b> ${orcid || "—"}</p>
+          <div class="doi">
+            <span class="meta"><b>DOI:</b> ${doi || "—"}</span>
+            ${doi ? `<a href="${esc(link)}" target="_blank" rel="noopener">Open DOI</a>` : ``}
           </div>
-        </article>
+        </div>
+      `;
+    }).join("");
 
-        <article class="card col-6">
-          <div class="pad">
-            <h3>Latest articles</h3>
-            <p>(empty)</p>
-          </div>
-        </article>
+    elArticlesStatus.textContent = `${latest.length} shown (latest 6) · ${list.length} total`;
+  }
 
-        <article class="card col-6">
-          <div class="pad">
-            <h3>Highlights</h3>
-            <p>(empty)</p>
-          </div>
-        </article>
-      </div>
-    </section>
-  </main>
+  async function loadArticles(){
+    elArticlesStatus.textContent = "Loading…";
+    elArticles.innerHTML = "";
+    const raw = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encodeURIComponent(folder)}/article.txt?t=${Date.now()}`;
+    try{
+      const res = await fetch(raw, { cache:"no-store" });
+      if(res.status === 404){
+        elArticlesStatus.textContent = "No indexed articles yet.";
+        renderLatest6([]);
+        return [];
+      }
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const list = parseJSONL(text);
+      renderLatest6(list);
+      return list;
+    } catch (e){
+      console.error(e);
+      elArticlesStatus.textContent = "Failed to load article index.";
+      return [];
+    }
+  }
 
-  <footer class="footer">
-    <div>© <span id="year"></span> Rubbish.</div>
-  </footer>
+  function gotoAll(){
+    location.href = `articles.html?j=${encodeURIComponent(folder)}`;
+  }
+  btnAll.addEventListener("click", gotoAll);
+  btnAll2.addEventListener("click", gotoAll);
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+  btnZenodo.addEventListener("click", ()=>{
+    window.open("https://zenodo.org/login", "_blank", "noopener");
+    setMsg("muted", "Zenodo opened in a new tab. After obtaining a DOI, paste it below and open the Issue draft.");
+  });
 
-    // Read sub-journal from query string
-    const qs = new URLSearchParams(location.search);
-    const folder = qs.get("j") || "";
+  btnRefresh.addEventListener("click", ()=>loadArticles());
 
-    // Update titles if sub-journal specified
-    const base = "Rubbish";
-    const title = folder ? `${base} — ${folder}` : base;
+  btnIssue.addEventListener("click", () => {
+    const title = (elFTitle.value||"").trim();
+    const authors = (elFAuthors.value||"").trim();
+    const affiliations = (elFAff.value||"").trim();
+    const orcid = (elFOrcid.value||"").trim();
+    const doi = normalizeDoi(elFDoi.value||"");
 
-    document.title = title;
-    document.getElementById("brandTitle").textContent = base;
-    document.getElementById("pageTitle").textContent = title;
-
-    // ✅ View all articles: preserve ?j=...
-    const btnAll = document.getElementById("btnAll");
-    const navAll = document.getElementById("navAllArticles");
-
-    function buildArticlesUrl() {
-      const u = new URL("articles.html", location.href);
-      if (folder) u.searchParams.set("j", folder);
-      return u.toString();
+    if(!title || !authors || !affiliations || !orcid || !doi){
+      setMsg("danger", "All fields are required: Title, Authors, Affiliations, ORCID, DOI.");
+      return;
     }
 
-    btnAll.addEventListener("click", () => {
-      location.href = buildArticlesUrl();
-    });
+    const issueTitle = (`[ARTICLE] ${title}`).slice(0,180);
+    const body =
+`JOURNAL_FOLDER: ${folder}
+TITLE: ${title}
+AUTHORS: ${authors}
+AFFILIATIONS: ${affiliations}
+ORCID: ${orcid}
+DOI: ${doi}
 
-    // also update nav link to carry j=
-    navAll.setAttribute("href", folder ? `articles.html?j=${encodeURIComponent(folder)}` : "articles.html");
+(Submitted from journal page)`;
 
-    // Zenodo submission button (placeholder)
-    const btnZenodo = document.getElementById("btnZenodo");
-    btnZenodo.addEventListener("click", () => {
-      // 你可以替换成你的 Zenodo 社区 / 表单链接
-      // 这里先给一个安全的占位：跳转到仓库的 README 或 articles 页面
-      location.href = "articles.html";
-    });
-  </script>
+    const url = new URL(`https://github.com/${OWNER}/${REPO}/issues/new`);
+    url.searchParams.set("title", issueTitle);
+    url.searchParams.set("body", body);
+
+    window.open(url.toString(), "_blank", "noopener");
+    setMsg("ok", "An Issue draft has been opened in a new tab. Submit it. The index will update automatically after the workflow completes.");
+  });
+
+  async function init(){
+    const [name, cover] = await Promise.all([readNameTxt(), pickCover()]);
+    document.title = `${name} | Rubbish`;
+    elTitle.textContent = name;
+    elCrumb.textContent = name;
+    elCover.src = cover;
+    elCover.alt = `${name} cover`;
+    await loadArticles();
+  }
+
+  init().catch(err=>{
+    console.error(err);
+    setMsg("danger", "Failed to initialize journal page.");
+  });
+})();
+</script>
 </body>
 </html>
