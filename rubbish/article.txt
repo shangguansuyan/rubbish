@@ -1,0 +1,1 @@
+{"ts":1771093777286,"title":"从\"垃圾\"中发掘科学价值——欢迎Rubbish系列期刊的诞生","authors":"Jinghua Gu","affiliations":"Anhui Medical University","orcid":"0009-0000-8691-1312","doi":"10.5281/zenodo.18643729","source_issue":"https://github.com/shangguansuyan/rubbish/issues/2"}
