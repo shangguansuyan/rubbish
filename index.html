@@ -2,336 +2,312 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Rubbish Journals</title>
-  <meta name="description" content="Rubbish journal series." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rubbish</title>
+  <meta name="description" content="Rubbish — A Nature-inspired journal homepage." />
 
   <style>
     :root{
       --bg:#ffffff;
-      --fg:#111111;
-      --muted:#636363;
-      --line:#e7e7e7;
-      --chip:#f4f4f4;
-      --link:#0b57d0;
-      --max:1260px;
-      --radius:16px;
+      --text:#111111;
+      --muted:#5a5a5a;
+      --border:#e8e8e8;
+      --card:#fafafa;
+      --btn:#111;
+      --btnText:#fff;
+      --btn2:#fff;
+      --btn2Text:#111;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --radius: 16px;
+      --max: 1180px;
+      --link:#0a58ca;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      color:var(--text);
       background:var(--bg);
-      color:var(--fg);
+      line-height:1.5;
     }
-    a{ text-decoration:none; color:inherit; }
-    a:hover{ color:var(--link); }
+    a{ color:var(--link); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
 
-    header{
-      border-bottom:1px solid var(--line);
-      background:#fff;
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
-    .wrap{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:22px 22px;
-    }
     .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:20px;
-      flex-wrap:wrap;
+      border-bottom:1px solid var(--border);
+      position:sticky; top:0; background:rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      z-index:20;
     }
+    .wrap{ max-width:var(--max); margin:0 auto; padding:14px 18px; }
+    .row{ display:flex; gap:14px; align-items:center; justify-content:space-between; }
     .brand{
-      display:flex;
-      align-items:baseline;
-      gap:12px;
-      white-space:nowrap;
+      display:flex; gap:12px; align-items:center;
+      min-width: 220px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, #111, #444);
+      box-shadow: var(--shadow);
     }
     .brand h1{
-      margin:0;
-      font-size:22px;
-      letter-spacing:.2px;
-      font-weight:850;
+      font-size:18px; margin:0; letter-spacing:.2px;
     }
-    .brand span{
-      font-size:12px;
-      background:var(--chip);
-      border:1px solid var(--line);
-      padding:4px 10px;
-      border-radius:999px;
-      color:#444;
+    .nav{
+      display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+      justify-content:center;
     }
-    .search input{
-      width:360px;
-      max-width:100%;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      outline:none;
+    .nav a{
+      color:var(--text);
       font-size:14px;
-      background:#fff;
+      padding:8px 10px;
+      border-radius:10px;
     }
+    .nav a:hover{ background:#f3f3f3; text-decoration:none; }
+
+    .actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .btn{
+      border:1px solid var(--btn);
+      background:var(--btn);
+      color:var(--btnText);
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:14px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn.secondary{
+      background:var(--btn2);
+      color:var(--btn2Text);
+      border:1px solid var(--border);
+    }
+    .btn:hover{ filter:brightness(0.95); }
+    .btn:active{ transform: translateY(1px); }
 
     .hero{
-      padding:34px 0 8px;
+      max-width:var(--max);
+      margin: 18px auto 0;
+      padding: 0 18px;
     }
-    .hero h2{
-      margin:0 0 10px;
-      font-size:32px;
-      letter-spacing:-.4px;
-      font-weight:900;
+    .heroCard{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
     }
-    .hero p{
+    .heroLeft{ padding:22px; }
+    .kicker{ font-size:12px; color:var(--muted); letter-spacing:.14em; text-transform:uppercase; }
+    .title{
+      margin:10px 0 6px;
+      font-size:36px;
+      line-height:1.15;
+      letter-spacing:-.02em;
+    }
+    .subtitle{
       margin:0;
       color:var(--muted);
       font-size:15px;
-      line-height:1.7;
-      max-width:920px;
+      max-width: 62ch;
     }
-    .hero .chips{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .heroMeta{
       margin-top:14px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
     }
-    .chip{
+    .pill{
       font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      background:var(--chip);
-      border:1px solid var(--line);
-      color:#333;
-      white-space:nowrap;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:20px;
-      padding:24px 0 52px;
-    }
-    @media (max-width:1100px){ .grid{grid-template-columns:repeat(3,1fr);} }
-    @media (max-width:820px){ .grid{grid-template-columns:repeat(2,1fr);} }
-    @media (max-width:520px){ .grid{grid-template-columns:1fr;} }
-
-    .card{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      overflow:hidden;
+      color:#222;
       background:#fff;
-      transition: transform .12s ease, box-shadow .14s ease;
-      display:flex;
-      flex-direction:column;
-      min-height: 260px;
+      border:1px solid var(--border);
+      padding:7px 10px;
+      border-radius:999px;
     }
-    .card:hover{
-      transform: translateY(-3px);
-      box-shadow:0 18px 44px rgba(0,0,0,.08);
+
+    .heroRight{
+      background:#fff;
+      border-left:1px solid var(--border);
+      display:flex;
+      align-items:stretch;
+      justify-content:stretch;
+      min-height: 260px;
     }
     .cover{
       width:100%;
-      aspect-ratio:4/3;
-      object-fit:cover;
-      background:#f5f5f5;
+      height:100%;
+      object-fit: cover;
       display:block;
     }
-    .meta{ padding:16px; }
-    .title{
-      margin:0 0 8px;
-      font-size:16px;
-      font-weight:800;
-      line-height:1.35;
+
+    .section{ max-width:var(--max); margin: 18px auto 0; padding: 0 18px 26px; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin-top: 14px;
     }
-    .sub{
-      margin:0;
-      font-size:12.5px;
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background:#fff;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .pad{ padding: 16px; }
+    .card h3{ margin:0 0 8px; font-size:16px; }
+    .card p{ margin:0; color:var(--muted); font-size:13px; }
+
+    .col-4{ grid-column: span 4; }
+    .col-6{ grid-column: span 6; }
+    .col-12{ grid-column: span 12; }
+
+    .list{
+      margin: 10px 0 0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .list a{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fafafa;
+      color:var(--text);
+      text-decoration:none;
+      font-size:14px;
+    }
+    .list a:hover{ background:#f2f2f2; }
+
+    .footer{
+      border-top:1px solid var(--border);
       color:var(--muted);
-      word-break: break-word;
+      font-size:12px;
+      padding: 18px;
+      max-width:var(--max);
+      margin: 0 auto 22px;
     }
 
-    .status{
-      font-size:13px;
-      color:var(--muted);
-      border-top:1px solid var(--line);
-      padding:14px 0;
+    @media (max-width: 980px){
+      .heroCard{ grid-template-columns: 1fr; }
+      .heroRight{ border-left:none; border-top:1px solid var(--border); min-height: 220px; }
+      .col-4{ grid-column: span 12; }
+      .col-6{ grid-column: span 12; }
+      .brand{ min-width:auto; }
     }
   </style>
 </head>
 
 <body>
-<header>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <h1>Rubbish</h1>
-        <span>Journals</span>
-      </div>
-      <div class="search">
-        <input id="q" type="search" placeholder="Search journals" autocomplete="off">
+  <header class="topbar">
+    <div class="wrap">
+      <div class="row">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <h1>Rubbish</h1>
+        </div>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="journal.html">Journal</a>
+          <a href="articles.html">All articles</a>
+        </nav>
+
+        <!-- ✅ 关键：编辑部按钮与加入按钮 -->
+        <div class="actions">
+          <button id="btnBoard" class="btn secondary" type="button">Editorial Board</button>
+          <button id="btnJoin" class="btn" type="button">Join the Editorial Board</button>
+        </div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
 
-<main>
-  <div class="wrap">
+  <main>
     <section class="hero">
-      <h2>Rubbish journal series</h2>
-      <p>
-        The Rubbish series is dedicated to transparent reporting of boundary findings: well-controlled negative results,
-        informative failures, reproducible anomalies, and method-anchored observations that deserve a permanent scholarly record.
-        Select a journal to browse indexed articles and editorial information.
-      </p>
-      <div class="chips">
-        <span class="chip">Open access</span>
-        <span class="chip">Methods & reproducibility</span>
-        <span class="chip">Negative results</span>
-        <span class="chip">Anomalies</span>
-        <span class="chip">Lab notes</span>
+      <div class="heroCard">
+        <div class="heroLeft">
+          <div class="kicker">Journal Home</div>
+          <h2 class="title">Rubbish</h2>
+          <p class="subtitle">
+            A Nature-inspired journal landing page. Article titles may be empty if not available.
+          </p>
+          <div class="heroMeta">
+            <span class="pill">Open access</span>
+            <span class="pill">Rapid publication</span>
+            <span class="pill">Multi-disciplinary</span>
+          </div>
+        </div>
+        <div class="heroRight">
+          <!-- ✅ 你的封面图 -->
+          <img class="cover" src="g3pip2k-1771080298817-192c9531.jpg" alt="Rubbish cover" />
+        </div>
       </div>
     </section>
 
-    <section id="grid" class="grid" aria-live="polite"></section>
+    <section class="section">
+      <div class="grid">
+        <article class="card col-6">
+          <div class="pad">
+            <h3>Featured</h3>
+            <p>(empty)</p>
+          </div>
+        </article>
 
-    <div id="status" class="status">Loading journals…</div>
-  </div>
-</main>
+        <article class="card col-6">
+          <div class="pad">
+            <h3>Latest</h3>
+            <p>(empty)</p>
+          </div>
+        </article>
 
-<script>
-(() => {
-  // Data source repository (journals + assets + article index + members.json)
-  const OWNER = "shangguansuyan";
-  const REPO  = "rubbish";
-  const BRANCH = "main";
-  const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+        <article class="card col-12">
+          <div class="pad">
+            <h3>Journals</h3>
+            <p>Browse sub-journals (folders) in this repository.</p>
 
-  const grid = document.getElementById("grid");
-  const status = document.getElementById("status");
-  const q = document.getElementById("q");
+            <ul class="list" aria-label="Sub-journals">
+              <li><a href="journal.html?j=General"><span>Rubbish — General</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Life%20Sciences%20%26%20Medicine"><span>Rubbish — Life Sciences &amp; Medicine</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Chemistry"><span>Rubbish — Chemistry</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Physical%20Sciences%20%26%20Engineering"><span>Rubbish — Physical Sciences &amp; Engineering</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Earth%20%26%20Environment"><span>Rubbish — Earth &amp; Environment</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Computation%20%26%20AI"><span>Rubbish — Computation &amp; AI</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Social%20%26%20Interdisciplinary"><span>Rubbish — Social &amp; Interdisciplinary</span><span>→</span></a></li>
+              <li><a href="journal.html?j=Reviews%20%26%20Methods%20Tier"><span>Rubbish — Reviews &amp; Methods Tier</span><span>→</span></a></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
 
-  let journals = [];
+  <footer class="footer">
+    <div>© <span id="year"></span> Rubbish. All rights reserved.</div>
+  </footer>
 
-  const isImage = (name) => /\.(png|jpe?g|webp|gif)$/i.test(name);
+  <script>
+    // footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-  function esc(s){
-    return String(s).replace(/[&<>"']/g, (c) => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-    })[c]);
-  }
+    // ✅ Buttons
+    const btnBoard = document.getElementById("btnBoard");
+    const btnJoin  = document.getElementById("btnJoin");
 
-  async function fetchJSON(url){
-    const res = await fetch(url, { headers: { "Accept":"application/vnd.github+json" }});
-    if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-    return await res.json();
-  }
+    btnBoard.addEventListener("click", () => {
+      location.href = "editorial-board.html";
+    });
 
-  async function listFolder(folder){
-    return await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}?ref=${encodeURIComponent(BRANCH)}`);
-  }
-
-  async function isJournalFolder(folder){
-    // A folder is a journal iff it contains name.txt
-    try{
-      const items = await listFolder(folder);
-      return items.some(x => x.type === "file" && x.name === "name.txt");
-    } catch {
-      return false;
-    }
-  }
-
-  async function readNameTxt(folder){
-    try{
-      const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
-      if(item && item.content){
-        return atob(item.content.replace(/\n/g,"")).trim() || folder;
-      }
-    } catch {}
-    return folder;
-  }
-
-  async function pickCoverFromFolder(folder){
-    try{
-      const items = await listFolder(folder);
-      const images = items
-        .filter(x => x.type === "file" && isImage(x.name))
-        .sort((a,b)=>a.name.localeCompare(b.name));
-      if(images.length > 0) return images[0].download_url;
-    } catch {}
-
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
-      <rect width='100%' height='100%' fill='#f2f2f2'/>
-      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
-            font-family='Arial' font-size='22' fill='#777'>No cover image</text>
-    </svg>`;
-    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-  }
-
-  function cardHTML(j){
-    const title = esc(j.title || j.folder);
-    const folder = esc(j.folder);
-    const href = `journal.html?j=${encodeURIComponent(j.folder)}`;
-    return `
-      <a class="card" href="${href}" aria-label="Open ${title}">
-        <img class="cover" src="${esc(j.coverUrl)}" alt="${title} cover" loading="lazy">
-        <div class="meta">
-          <p class="title">${title}</p>
-          <p class="sub">${folder}</p>
-        </div>
-      </a>
-    `;
-  }
-
-  function render(list){
-    grid.innerHTML = list.map(cardHTML).join("");
-    status.textContent = `${list.length} journal(s)`;
-  }
-
-  function applyFilter(){
-    const term = (q.value || "").trim().toLowerCase();
-    if(!term){ render(journals); return; }
-    const filtered = journals.filter(j =>
-      (j.title || "").toLowerCase().includes(term) ||
-      (j.folder || "").toLowerCase().includes(term)
-    );
-    render(filtered);
-  }
-
-  async function load(){
-    status.textContent = "Loading journals…";
-    const rootItems = await fetchJSON(`${apiRoot}?ref=${encodeURIComponent(BRANCH)}`);
-    const dirNames = rootItems
-      .filter(x => x.type === "dir")
-      .map(x => x.name)
-      .sort((a,b)=>a.localeCompare(b));
-
-    const results = [];
-    for(const folder of dirNames){
-      const ok = await isJournalFolder(folder);
-      if(!ok) continue;
-
-      const [title, coverUrl] = await Promise.all([
-        readNameTxt(folder),
-        pickCoverFromFolder(folder)
-      ]);
-      results.push({ folder, title, coverUrl });
-    }
-
-    journals = results.sort((a,b)=> (a.title || a.folder).localeCompare(b.title || b.folder));
-    render(journals);
-  }
-
-  q.addEventListener("input", applyFilter);
-
-  load().catch(err => {
-    console.error(err);
-    status.textContent = "Failed to load journals.";
-  });
-})();
-</script>
+    // 你可以之后把 Join 做成表单 / mailto / GitHub issue
+    btnJoin.addEventListener("click", () => {
+      // 默认走编辑部页面的 Join 区块
+      location.href = "editorial-board.html#join";
+    });
+  </script>
 </body>
 </html>
