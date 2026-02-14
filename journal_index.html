@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>学术期刊主页</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --accent: #0ea5e9;
+      --bg: #f4f7fb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --border: #dbe4f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .top-banner {
+      background: linear-gradient(120deg, var(--primary), #0f172a);
+      color: #fff;
+      padding: 26px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .journal-title {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: 1px;
+    }
+
+    .journal-subtitle {
+      margin: 6px 0 0;
+      opacity: 0.9;
+      font-size: 15px;
+    }
+
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+    }
+
+    .nav a {
+      display: inline-block;
+      padding: 14px 0;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .nav a:hover { color: var(--accent); }
+
+    main {
+      padding: 26px 0 34px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 300px 1fr;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      padding: 16px;
+    }
+
+    .cover {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      border: 1px solid var(--border);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: #0f172a;
+    }
+
+    .meta p,
+    .notice li,
+    .articles li {
+      margin: 8px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .notice,
+    .articles {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .article-title {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 20px 0 28px;
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-banner">
+    <div class="container">
+      <h1 class="journal-title">现代科学研究期刊</h1>
+      <p class="journal-subtitle">Modern Journal of Scientific Research · ISSN 2099-XXXX</p>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <div class="container">
+      <ul>
+        <li><a href="#">首页</a></li>
+        <li><a href="#">期刊简介</a></li>
+        <li><a href="#">编委会</a></li>
+        <li><a href="#">当期目录</a></li>
+        <li><a href="#">过刊浏览</a></li>
+        <li><a href="#">作者指南</a></li>
+        <li><a href="#">在线投稿</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <main>
+      <aside class="card">
+        <h2>本期封面</h2>
+        <img class="cover" src="g3pip2k-1771080298817-192c9531.jpg" alt="期刊封面" />
+        <div class="meta">
+          <p><strong>卷期：</strong>2026年 第1期（总第45期）</p>
+          <p><strong>出版日期：</strong>2026-01-15</p>
+          <p><strong>主办单位：</strong>现代科学研究学会</p>
+        </div>
+      </aside>
+
+      <section>
+        <article class="card" style="margin-bottom: 16px;">
+          <h2>期刊公告</h2>
+          <ul class="notice">
+            <li>2026年度优秀论文评选正式启动，欢迎作者积极参与。</li>
+            <li>本刊已被多家国内外数据库收录，提升论文影响力。</li>
+            <li>投稿系统升级完成，支持ORCID作者身份绑定。</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>最新文章</h2>
+          <ul class="articles">
+            <li>
+              <span class="article-title">面向可持续发展的城市能源调度模型研究</span>
+              <span class="tag">研究论文</span>
+              <br />
+              作者：李明，张琪，王楠
+            </li>
+            <li>
+              <span class="article-title">多模态智能诊断系统在医疗场景中的应用进展</span>
+              <span class="tag">综述</span>
+              <br />
+              作者：陈辰，刘玥
+            </li>
+            <li>
+              <span class="article-title">基于深度学习的生态监测数据异常检测方法</span>
+              <span class="tag">技术报告</span>
+              <br />
+              作者：周安，赵琳
+            </li>
+          </ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    © 2026 现代科学研究期刊 · 联系邮箱：editor@journal.example
+  </footer>
+</body>
+</html>
