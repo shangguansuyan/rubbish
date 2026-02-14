@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rubbish | Journal Home</title>
+  <meta name="description" content="Rubbish — a journal homepage (GitHub-ready)." />
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#0b0f18;
+      --muted:#5b6475;
+      --border:#e6e9ef;
+      --soft:#f6f7fb;
+      --brand:#0a3d91;
+      --brand2:#0b7a75;
+      --shadow:0 8px 24px rgba(15, 23, 42, .08);
+      --radius:16px;
+      --radius2:22px;
+      --maxw:1160px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--sans); color:var(--fg); background:var(--bg);
+      line-height:1.45;
+    }
+    a{color:inherit; text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw); margin:0 auto; padding:0 18px}
+    .skip{
+      position:absolute; left:-999px; top:8px; background:var(--fg); color:#fff;
+      padding:10px 12px; border-radius:10px; z-index:9999;
+    }
+    .skip:focus{left:12px}
+
+    /* Top bar */
+    .topbar{
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg, #ffffff, #fbfbfe);
+      position:sticky; top:0; z-index:1000;
+      backdrop-filter:saturate(1.2) blur(8px);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; padding:12px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; min-width:170px;
+    }
+    .brand-mark{
+      width:34px; height:34px; border-radius:10px;
+      background:conic-gradient(from 220deg, var(--brand), var(--brand2), #7c3aed, var(--brand));
+      box-shadow:0 6px 16px rgba(10, 61, 145, .22);
+    }
+    .brand-title{
+      display:flex; flex-direction:column;
+    }
+    .brand-title strong{font-size:14px; letter-spacing:.3px}
+    .brand-title span{font-size:12px; color:var(--muted)}
+    .nav{
+      display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+      justify-content:center;
+    }
+    .nav a{
+      font-size:13px; color:#1b2436;
+      padding:8px 10px; border-radius:10px;
+    }
+    .nav a:hover{background:var(--soft); text-decoration:none}
+    .actions{
+      display:flex; align-items:center; gap:10px; justify-content:flex-end;
+      min-width:260px;
+    }
+    .search{
+      position:relative; flex:1; min-width:170px;
+    }
+    .search input{
+      width:100%; padding:10px 12px 10px 36px;
+      border:1px solid var(--border); border-radius:12px;
+      background:#fff; outline:none; font-size:13px;
+    }
+    .search input:focus{border-color:#b9c7e6; box-shadow:0 0 0 3px rgba(10,61,145,.10)}
+    .search svg{
+      position:absolute; left:10px; top:50%; transform:translateY(-50%);
+      width:16px; height:16px; opacity:.65;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:#fff; color:#1b2436;
+      padding:10px 12px; border-radius:12px; font-size:13px;
+      display:inline-flex; align-items:center; gap:8px;
+      cursor:pointer;
+    }
+    .btn:hover{box-shadow:0 6px 18px rgba(15,23,42,.08)}
+    .btn.primary{
+      background:linear-gradient(135deg, var(--brand), #154bb0);
+      color:#fff; border-color:transparent;
+    }
+
+    /* Hero */
+    .hero{
+      padding:26px 0 18px;
+      background:
+        radial-gradient(900px 280px at 18% 0%, rgba(10,61,145,.12), transparent 60%),
+        radial-gradient(900px 320px at 90% 20%, rgba(11,122,117,.10), transparent 58%),
+        linear-gradient(180deg, #ffffff, #fbfbfe);
+      border-bottom:1px solid var(--border);
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .hero-card{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hero-main{
+      padding:18px 18px 14px;
+    }
+    .kicker{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; color:var(--muted);
+      background:var(--soft);
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border);
+    }
+    .hero h1{
+      margin:12px 0 8px;
+      font-size:34px; line-height:1.1;
+      letter-spacing:-.6px;
+    }
+    .hero p{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:14px;
+      max-width:64ch;
+    }
+    .hero-meta{
+      display:flex; flex-wrap:wrap; gap:10px;
+      color:#2a3448; font-size:13px;
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      background:#fff;
+      border:1px solid var(--border);
+      padding:8px 10px; border-radius:999px;
+    }
+    .pill b{font-family:var(--mono); font-size:12px}
+    .hero-ctas{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding:0 18px 18px;
+    }
+    .cover{
+      position:relative; height:100%;
+      min-height:280px;
+      background:#0b0f18;
+    }
+    .cover img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      filter:saturate(1.05) contrast(1.03);
+    }
+    .cover-badge{
+      position:absolute; left:14px; bottom:14px;
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(230,233,239,.9);
+      border-radius:14px;
+      padding:10px 12px;
+      box-shadow:0 10px 26px rgba(0,0,0,.18);
+    }
+    .cover-badge strong{display:block; font-size:12px}
+    .cover-badge span{display:block; font-size:12px; color:var(--muted)}
+
+    /* Sections */
+    .section{padding:18px 0}
+    .section h2{
+      font-size:18px; margin:0 0 10px;
+      letter-spacing:-.2px;
+    }
+    .section .sub{
+      margin:0 0 14px; color:var(--muted); font-size:13px;
+    }
+
+    .grid{
+      display:grid; gap:12px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:#fff;
+      box-shadow:0 8px 18px rgba(15,23,42,.06);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg, #ffffff, #fbfbfe);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .card .hd strong{font-size:13px}
+    .card .hd a{font-size:12px; color:var(--brand)}
+    .card .bd{padding:12px 14px}
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .item{
+      border:1px dashed var(--border);
+      border-radius:14px;
+      padding:10px 12px;
+      background: #ffffff;
+    }
+    .item .t{
+      font-size:13px; color:#1b2436;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .item .t em{color:var(--muted); font-style:normal; font-size:12px}
+    .item .m{
+      margin-top:6px; font-size:12px; color:var(--muted);
+    }
+    .empty{
+      color:var(--muted); font-style:italic;
+    }
+
+    /* Journal network */
+    .network{
+      background:linear-gradient(180deg, #ffffff, #fbfbfe);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+    }
+    .filters{
+      display:flex; flex-wrap:wrap; gap:8px;
+      margin:10px 0 0;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .chip[aria-pressed="true"]{
+      border-color:rgba(10,61,145,.45);
+      box-shadow:0 0 0 3px rgba(10,61,145,.10);
+      color:var(--brand);
+      background:rgba(10,61,145,.04);
+    }
+    .journal-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    .jcard{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:#fff;
+      padding:12px 12px 10px;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+      display:flex; flex-direction:column; gap:8px;
+      min-height:116px;
+    }
+    .jtop{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .jname{
+      font-size:13px; font-weight:700; letter-spacing:.1px;
+    }
+    .tag{
+      font-size:11px; color:var(--muted);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 8px;
+      background:var(--soft);
+      white-space:nowrap;
+    }
+    .jdesc{font-size:12px; color:var(--muted); margin:0}
+    .jmeta{
+      margin-top:auto;
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:12px; color:#2a3448;
+    }
+    .jmeta a{color:var(--brand)}
+    .az{
+      display:flex; flex-wrap:wrap; gap:8px;
+      padding-top:6px;
+    }
+    .az a{
+      font-size:12px; color:#1b2436;
+      padding:6px 8px; border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    .az a:hover{background:var(--soft); text-decoration:none}
+
+    /* Layout mapping */
+    .span-8{grid-column: span 8}
+    .span-4{grid-column: span 4}
+    .span-6{grid-column: span 6}
+    .span-12{grid-column: span 12}
+
+    /* Footer */
+    footer{
+      padding:26px 0 34px;
+      color:var(--muted);
+    }
+    .foot-grid{
+      display:grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap:14px;
+      border-top:1px solid var(--border);
+      padding-top:18px;
+    }
+    .foot-grid h3{
+      font-size:12px; margin:0 0 10px; color:#1b2436;
+      letter-spacing:.2px;
+    }
+    .foot-grid a{display:block; padding:4px 0; font-size:12px; color:var(--muted)}
+    .copy{margin-top:14px; font-size:12px}
+    .small{font-size:12px; color:var(--muted)}
+    .kbd{
+      font-family:var(--mono);
+      border:1px solid var(--border);
+      background:var(--soft);
+      border-bottom-color:#d6dae5;
+      padding:2px 6px; border-radius:8px;
+      font-size:11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns: 1fr}
+      .actions{min-width:0}
+      .journal-grid{grid-template-columns: repeat(2, 1fr)}
+      .foot-grid{grid-template-columns: 1fr 1fr}
+    }
+    @media (max-width: 560px){
+      .nav{display:none}
+      .journal-grid{grid-template-columns: 1fr}
+      .foot-grid{grid-template-columns: 1fr}
+      .hero h1{font-size:28px}
+      .actions{gap:8px}
+    }
+  </style>
+</head>
+
+<body>
+<a class="skip" href="#main">跳到正文</a>
+
+<header class="topbar" role="banner">
+  <div class="container topbar-inner">
+    <a class="brand" href="#" aria-label="Rubbish home">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-title">
+        <strong>Rubbish</strong>
+        <span>Journal</span>
+      </div>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="#latest">Latest</a>
+      <a href="#news">News &amp; Views</a>
+      <a href="#collections">Collections</a>
+      <a href="#authors">For Authors</a>
+      <a href="#about">About</a>
+      <a href="#network">Journals</a>
+    </nav>
+
+    <div class="actions" aria-label="Actions">
+      <div class="search" role="search">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.2-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="q" type="search" placeholder="Search Rubbish" aria-label="Search Rubbish" />
+      </div>
+      <button class="btn" id="btnSignIn" type="button" aria-label="Sign in">
+        Sign in
+      </button>
+      <a class="btn primary" href="#authors" aria-label="Submit manuscript">
+        Submit
+      </a>
+    </div>
+  </div>
+</header>
+
+<section class="hero" aria-label="Hero">
+  <div class="container hero-grid">
+    <div class="hero-card">
+      <div class="hero-main">
+        <div class="kicker" title="Site note">
+          <span aria-hidden="true">●</span>
+          <span>Journal homepage</span>
+          <span class="kbd">GitHub-ready</span>
+        </div>
+
+        <h1>Rubbish</h1>
+        <p>
+          A clean, Nature-like journal landing page layout: primary navigation, cover hero,
+          latest content blocks, author resources, and a journal network.
+        </p>
+
+        <div class="hero-meta" aria-label="Journal quick facts">
+          <span class="pill"><b>OA</b> <span>Open access (optional)</span></span>
+          <span class="pill"><b>ISSN</b> <span class="empty">（空）</span></span>
+          <span class="pill"><b>IF</b> <span class="empty">（空）</span></span>
+          <span class="pill"><b>Scope</b> <span class="empty">（空）</span></span>
+        </div>
+      </div>
+
+      <div class="hero-ctas">
+        <a class="btn primary" href="#latest">Explore latest</a>
+        <a class="btn" href="#network">Browse journals</a>
+        <a class="btn" href="#authors">Author guidance</a>
+      </div>
+    </div>
+
+    <aside class="hero-card cover" aria-label="Journal cover">
+      <!-- 封面图：使用项目内已上传图片 -->
+      <img src="g3pip2k-1771080298817-192c9531.jpg" alt="Rubbish journal cover" />
+      <div class="cover-badge">
+        <strong>Cover</strong>
+        <span class="small">g3pip2k-1771080298817-192c9531.jpg</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<main id="main" class="container" role="main">
+
+  <!-- Latest -->
+  <section id="latest" class="section" aria-label="Latest content">
+    <h2>Latest</h2>
+    <p class="sub">不编文章标题：如果没有内容，保持为空或显示“（空）”。</p>
+
+    <div class="grid">
+      <div class="card span-8" aria-label="Latest Research">
+        <div class="hd">
+          <strong>Research</strong>
+          <a href="#" aria-label="View all research">View all</a>
+        </div>
+        <div class="bd">
+          <div class="list" id="latestResearch">
+            <!-- 留空，不编标题 -->
+            <div class="item">
+              <div class="t">
+                <span class="empty">（空）</span>
+                <em>Article</em>
+              </div>
+              <div class="m">Authors: <span class="empty">（空）</span> · Published: <span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t">
+                <span class="empty">（空）</span>
+                <em>Letter</em>
+              </div>
+              <div class="m">Authors: <span class="empty">（空）</span> · Published: <span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t">
+                <span class="empty">（空）</span>
+                <em>Analysis</em>
+              </div>
+              <div class="m">Authors: <span class="empty">（空）</span> · Published: <span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-4" aria-label="In Focus">
+        <div class="hd">
+          <strong>In Focus</strong>
+          <a href="#" aria-label="View all highlights">View all</a>
+        </div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t">
+                <span class="empty">（空）</span>
+                <em>Editorial</em>
+              </div>
+              <div class="m">Short summary: <span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t">
+                <span class="empty">（空）</span>
+                <em>Perspective</em>
+              </div>
+              <div class="m">Short summary: <span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-6" id="news" aria-label="News & Views">
+        <div class="hd">
+          <strong>News &amp; Views</strong>
+          <a href="#" aria-label="View all news and views">View all</a>
+        </div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t"><span class="empty">（空）</span><em>News</em></div>
+              <div class="m">Category: <span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t"><span class="empty">（空）</span><em>Viewpoint</em></div>
+              <div class="m">Category: <span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-6" id="collections" aria-label="Collections">
+        <div class="hd">
+          <strong>Collections</strong>
+          <a href="#" aria-label="View all collections">View all</a>
+        </div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t"><span class="empty">（空）</span><em>Collection</em></div>
+              <div class="m">Scope: <span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t"><span class="empty">（空）</span><em>Special Issue</em></div>
+              <div class="m">Scope: <span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- For Authors -->
+  <section id="authors" class="section" aria-label="For Authors">
+    <h2>For Authors</h2>
+    <p class="sub">投稿入口、指南、政策信息（内容可后续替换）。</p>
+
+    <div class="grid">
+      <div class="card span-4" aria-label="Submission">
+        <div class="hd"><strong>Submission</strong><a href="#">Open</a></div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t"><span>Submit manuscript</span><em>Portal</em></div>
+              <div class="m">Status: <span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t"><span>Article types</span><em>Guide</em></div>
+              <div class="m">List: <span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-4" aria-label="Policies">
+        <div class="hd"><strong>Policies</strong><a href="#">Open</a></div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t"><span>Ethics &amp; integrity</span><em>Policy</em></div>
+              <div class="m"><span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t"><span>Data availability</span><em>Policy</em></div>
+              <div class="m"><span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-4" aria-label="Open Research">
+        <div class="hd"><strong>Open Research</strong><a href="#">Open</a></div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t"><span>Open access</span><em>Option</em></div>
+              <div class="m"><span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t"><span>Preprints</span><em>Option</em></div>
+              <div class="m"><span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Journal Network (Nature-like sub-journals) -->
+  <section id="network" class="section network" aria-label="Journal network">
+    <div class="container">
+      <h2>Rubbish Journals</h2>
+      <p class="sub">类似 Nature 的“子刊网络”：按领域筛选与浏览（名称为示例，不使用 Nature 的真实刊名）。</p>
+
+      <div class="filters" role="toolbar" aria-label="Filter journals">
+        <button class="chip" type="button" aria-pressed="true" data-filter="all">All</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="multidisciplinary">Multidisciplinary</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="life">Life sciences</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="medicine">Medicine</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="engineering">Engineering</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="data">Data &amp; Methods</button>
+      </div>
+
+      <div class="journal-grid" id="journalGrid">
+        <!-- 子刊卡片（示例） -->
+        <article class="jcard" data-tags="multidisciplinary">
+          <div class="jtop">
+            <div class="jname">Rubbish</div>
+            <span class="tag">Flagship</span>
+          </div>
+          <p class="jdesc">The flagship journal covering broad topics.</p>
+          <div class="jmeta">
+            <span>Open access: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="multidisciplinary,data">
+          <div class="jtop">
+            <div class="jname">Rubbish Communications</div>
+            <span class="tag">Multidisciplinary</span>
+          </div>
+          <p class="jdesc">Short-format communications across disciplines.</p>
+          <div class="jmeta">
+            <span>APC: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="life,data">
+          <div class="jtop">
+            <div class="jname">Rubbish Biology</div>
+            <span class="tag">Life</span>
+          </div>
+          <p class="jdesc">Molecular, cellular and systems biology.</p>
+          <div class="jmeta">
+            <span>Scope: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="medicine,life">
+          <div class="jtop">
+            <div class="jname">Rubbish Medicine</div>
+            <span class="tag">Medicine</span>
+          </div>
+          <p class="jdesc">Clinical and translational research.</p>
+          <div class="jmeta">
+            <span>Trials: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="engineering">
+          <div class="jtop">
+            <div class="jname">Rubbish Engineering</div>
+            <span class="tag">Engineering</span>
+          </div>
+          <p class="jdesc">Devices, materials and applied systems.</p>
+          <div class="jmeta">
+            <span>Review time: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="data">
+          <div class="jtop">
+            <div class="jname">Rubbish Methods</div>
+            <span class="tag">Methods</span>
+          </div>
+          <p class="jdesc">Tools, protocols, and computational methods.</p>
+          <div class="jmeta">
+            <span>Code: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="life,medicine,data">
+          <div class="jtop">
+            <div class="jname">Rubbish Immunology</div>
+            <span class="tag">Life/Med</span>
+          </div>
+          <p class="jdesc">Immunity, inflammation and host defense.</p>
+          <div class="jmeta">
+            <span>Editors: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+
+        <article class="jcard" data-tags="multidisciplinary">
+          <div class="jtop">
+            <div class="jname">Rubbish Reviews</div>
+            <span class="tag">Reviews</span>
+          </div>
+          <p class="jdesc">Authoritative reviews and perspectives.</p>
+          <div class="jmeta">
+            <span>Invited: <span class="empty">（空）</span></span>
+            <a href="#top">Visit</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="section" aria-label="Journals A-Z">
+        <h2>Journals A–Z</h2>
+        <p class="sub">快速索引（示例）。</p>
+        <div class="az" aria-label="Alphabet index">
+          <a href="#" aria-label="A">A</a><a href="#" aria-label="B">B</a><a href="#" aria-label="C">C</a><a href="#" aria-label="D">D</a>
+          <a href="#" aria-label="E">E</a><a href="#" aria-label="F">F</a><a href="#" aria-label="G">G</a><a href="#" aria-label="H">H</a>
+          <a href="#" aria-label="I">I</a><a href="#" aria-label="J">J</a><a href="#" aria-label="K">K</a><a href="#" aria-label="L">L</a>
+          <a href="#" aria-label="M">M</a><a href="#" aria-label="N">N</a><a href="#" aria-label="O">O</a><a href="#" aria-label="P">P</a>
+          <a href="#" aria-label="Q">Q</a><a href="#" aria-label="R">R</a><a href="#" aria-label="S">S</a><a href="#" aria-label="T">T</a>
+          <a href="#" aria-label="U">U</a><a href="#" aria-label="V">V</a><a href="#" aria-label="W">W</a><a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="Y">Y</a><a href="#" aria-label="Z">Z</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section" aria-label="About">
+    <h2>About Rubbish</h2>
+    <p class="sub">关于页面占位：可替换为宗旨、范围、编辑部信息、联系邮箱等。</p>
+
+    <div class="grid">
+      <div class="card span-8" aria-label="Aims & scope">
+        <div class="hd"><strong>Aims &amp; scope</strong><a href="#">Open</a></div>
+        <div class="bd">
+          <p class="small" style="margin:0;">
+            <span class="empty">（空）</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="card span-4" aria-label="Contact">
+        <div class="hd"><strong>Contact</strong><a href="#">Open</a></div>
+        <div class="bd">
+          <div class="list">
+            <div class="item">
+              <div class="t"><span>Email</span><em>Support</em></div>
+              <div class="m"><span class="empty">（空）</span></div>
+            </div>
+            <div class="item">
+              <div class="t"><span>Address</span><em>Office</em></div>
+              <div class="m"><span class="empty">（空）</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer role="contentinfo">
+  <div class="container">
+    <div class="foot-grid" aria-label="Footer links">
+      <div>
+        <h3>Rubbish</h3>
+        <div class="small">
+          A GitHub-ready journal landing page template.<br/>
+          Keyboard tip: focus search and press <span class="kbd">Enter</span>.
+        </div>
+        <div class="copy">© <span id="year"></span> Rubbish</div>
+      </div>
+      <div>
+        <h3>Content</h3>
+        <a href="#latest">Latest</a>
+        <a href="#news">News &amp; Views</a>
+        <a href="#collections">Collections</a>
+      </div>
+      <div>
+        <h3>Authors</h3>
+        <a href="#authors">Submit</a>
+        <a href="#authors">Policies</a>
+        <a href="#authors">Open Research</a>
+      </div>
+      <div>
+        <h3>Network</h3>
+        <a href="#network">Journals</a>
+        <a href="#network">A–Z index</a>
+        <a href="#about">About</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 年份
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // 搜索框：演示用（不联网、不生成内容）
+  const q = document.getElementById("q");
+  q.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      alert("Search query: " + (q.value || "（空）") + "\\n（演示占位：请自行接入站内搜索/索引）");
+    }
+  });
+
+  // 子刊筛选
+  const chips = Array.from(document.querySelectorAll(".chip"));
+  const cards = Array.from(document.querySelectorAll("#journalGrid .jcard"));
+
+  function setPressed(btn){
+    chips.forEach(c => c.setAttribute("aria-pressed", "false"));
+    btn.setAttribute("aria-pressed", "true");
+  }
+
+  function applyFilter(filter){
+    cards.forEach(card => {
+      const tags = (card.getAttribute("data-tags") || "").split(",").map(s => s.trim()).filter(Boolean);
+      const show = (filter === "all") || tags.includes(filter);
+      card.style.display = show ? "flex" : "none";
+    });
+  }
+
+  chips.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const f = btn.getAttribute("data-filter");
+      setPressed(btn);
+      applyFilter(f);
+    });
+  });
+</script>
+</body>
+</html>
