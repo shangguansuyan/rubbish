@@ -1,0 +1,165 @@
+name: Register article (Issue -> article.txt)
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: register-article
+  cancel-in-progress: false
+
+jobs:
+  register:
+    if: startsWith(github.event.issue.title, '[ARTICLE] ')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse issue body, validate, append to article.txt
+        id: process
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+
+            function getField(key) {
+              // Expect a line: KEY: value
+              // Works with Issue Forms too if the body contains "KEY: ..."
+              const re = new RegExp(`^${key}:\\s*(.+)$`, 'mi');
+              const m = body.match(re);
+              return m ? m[1].trim() : '';
+            }
+
+            const journal = getField('JOURNAL_FOLDER');
+            const title = getField('TITLE');
+            const authors = getField('AUTHORS');
+            const affiliations = getField('AFFILIATIONS');
+            const orcid = getField('ORCID');
+            const doiRaw = getField('DOI');
+
+            const required = { journal, title, authors, affiliations, orcid, doiRaw };
+            const missing = Object.entries(required)
+              .filter(([k, v]) => !v)
+              .map(([k]) => k.toUpperCase());
+
+            if (missing.length) {
+              core.setFailed(`Missing required field(s): ${missing.join(', ')}`);
+              return;
+            }
+
+            // Basic folder name constraints (avoid path traversal)
+            if (!/^[0-9A-Za-z._-]+$/.test(journal)) {
+              core.setFailed('Invalid JOURNAL_FOLDER. Allowed: letters, numbers, dot, underscore, hyphen.');
+              return;
+            }
+
+            // DOI minimal sanity check: accept DOI anywhere in the string
+            const m = doiRaw.match(/10\.\d{4,9}\/\S+/);
+            if (!m) {
+              core.setFailed('DOI format invalid. Expected something like 10.xxxx/xxxxx');
+              return;
+            }
+            const doi = m[0].replace(/[)\],.]+$/,''); // strip trailing punctuation
+
+            // Optional lightweight ORCID sanity check (do not hard-fail)
+            // ORCID canonical: 0000-0000-0000-0000 (last digit may be X)
+            const orcidOk = /^(\d{4}-){3}(\d{3}[0-9X])$/.test(orcid);
+            if (!orcidOk) {
+              console.log('Warning: ORCID format not canonical, continuing:', orcid);
+            }
+
+            // Ensure journal directory exists in repo
+            const targetDir = path.join(process.cwd(), journal);
+            if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
+              core.setFailed(`Journal folder not found in repository: ${journal}`);
+              return;
+            }
+
+            const articlePath = path.join(targetDir, 'article.txt');
+
+            // JSONL entry
+            const entry = {
+              ts: Date.now(),
+              title: title,
+              authors: authors,
+              affiliations: affiliations,
+              orcid: orcid,
+              doi: doi,
+              source_issue: issue.html_url
+            };
+
+            fs.appendFileSync(articlePath, JSON.stringify(entry) + '\n', { encoding: 'utf8' });
+
+            core.setOutput('journal', journal);
+            core.setOutput('doi', doi);
+            core.setOutput('article_relpath', `${journal}/article.txt`);
+
+      - name: Commit and push changes
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ steps.process.outputs.article_relpath }}"
+          git commit -m "Register article: ${{ steps.process.outputs.doi }}" || echo "Nothing to commit"
+          git push
+
+      - name: Comment success and close issue
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const journal = '${{ steps.process.outputs.journal }}';
+            const doi = '${{ steps.process.outputs.doi }}';
+            const doiUrl = `https://doi.org/${encodeURIComponent(doi)}`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `✅ Registered to **${journal}/article.txt**\n\nDOI: ${doiUrl}`
+            });
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              state: 'closed'
+            });
+
+      - name: Comment failure and label issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const msg = `❌ Registration failed.\n\nPlease ensure the issue body contains ALL required lines:\n` +
+              `- JOURNAL_FOLDER: <folder>\n- TITLE: <title>\n- AUTHORS: <authors>\n- AFFILIATIONS: <affiliations>\n- ORCID: <orcid>\n- DOI: <doi>\n\n` +
+              `Check workflow logs: ${runUrl}`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: msg
+            });
+
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                labels: ['registration-failed']
+              });
+            } catch (e) {
+              console.log('Could not add label (maybe missing permission or label does not exist).', e);
+            }
