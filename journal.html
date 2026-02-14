@@ -53,7 +53,9 @@
       border-radius:999px;
       font-size:13px;
       cursor:pointer;
+      white-space:nowrap;
     }
+    .btn:disabled{opacity:.5; cursor:not-allowed}
     .btn:active{transform:translateY(1px)}
     .btn.secondary{
       background:#fff;
@@ -165,12 +167,18 @@
       font-size:12.5px;
       line-height:1.4;
       margin-top:8px;
+      white-space:pre-wrap;
     }
     .ok{
       color:#0b7a2a;
       font-size:12.5px;
       line-height:1.4;
       margin-top:8px;
+      white-space:pre-wrap;
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
     }
   </style>
 </head>
@@ -185,7 +193,6 @@
         <span id="crumbJournal">Journal</span>
       </div>
       <div style="display:flex; gap:10px; align-items:center;">
-        <!-- No submit button on homepage. Here we provide it. -->
         <button id="btnZenodo" class="btn" type="button">Submit via Zenodo</button>
       </div>
     </div>
@@ -198,13 +205,14 @@
     <div>
       <h1 id="title">Journal</h1>
       <p class="desc">
-        Submissions are handled through Zenodo. After uploading your PDF and obtaining a DOI,
-        return here to register the article metadata into this journal index.
+        Submissions are handled through Zenodo. Upload your PDF on Zenodo to obtain a DOI, then return here and
+        register the metadata. Registration is performed by creating a GitHub Issue which is processed automatically
+        to update <b>article.txt</b> in this journal folder.
       </p>
       <div class="row">
         <span class="pill" id="pillFolder">folder</span>
         <span class="pill">Open access</span>
-        <span class="pill">Index updates in real time</span>
+        <span class="pill">Live index</span>
       </div>
     </div>
   </section>
@@ -214,7 +222,7 @@
       <div class="panel">
         <h2>Articles</h2>
         <div class="search" style="margin:10px 0 12px;">
-          <input id="search" type="search" placeholder="Search articles by title, author, DOI" autocomplete="off" />
+          <input id="search" type="search" placeholder="Search by title, author, DOI" autocomplete="off" />
         </div>
         <div id="articles" class="articles" aria-live="polite"></div>
         <p id="articlesStatus" class="muted" style="margin-top:10px;">Loading…</p>
@@ -223,18 +231,16 @@
 
     <aside>
       <div class="panel">
-        <h2>Register your article (required)</h2>
+        <h2>Register your article (all fields required)</h2>
         <p class="muted">
-          1) Click “Submit via Zenodo” to log in and upload your PDF.<br/>
-          2) Copy the DOI assigned by Zenodo.<br/>
-          3) Fill in all fields below (no field can be empty).<br/>
-          4) Submit to append into <b>article.txt</b> in this journal folder.
+          1) Click <b>Submit via Zenodo</b> to log in and upload your PDF.<br/>
+          2) Copy the DOI assigned by Zenodo (or any DOI resolver DOI).<br/>
+          3) Fill in all fields below.<br/>
+          4) Click <b>Open GitHub Issue Draft</b>, then submit the issue in the new tab.<br/>
+          5) The index will update automatically after the workflow runs.
         </p>
 
         <div class="hr"></div>
-
-        <label>GitHub Token (required for writing article.txt)</label>
-        <input id="token" type="password" placeholder="Fine-grained PAT with Contents: Read & Write" />
 
         <label>Title</label>
         <textarea id="fTitle" placeholder="Article title"></textarea>
@@ -251,12 +257,28 @@
         <label>DOI</label>
         <input id="fDoi" type="text" placeholder="e.g., 10.5281/zenodo.1234567" />
 
-        <div style="display:flex; gap:10px; margin-top:12px;">
-          <button id="btnSave" class="btn" type="button">Save to journal index</button>
+        <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+          <button id="btnIssue" class="btn" type="button">Open GitHub Issue Draft</button>
           <button id="btnRefresh" class="btn secondary" type="button">Refresh list</button>
         </div>
 
+        <p class="muted" style="margin-top:10px;">
+          Note: You must be logged in to GitHub to submit the issue. No GitHub token is required.
+        </p>
+
         <p id="msg" class="muted" style="margin-top:10px;"></p>
+
+        <div class="hr"></div>
+
+        <p class="muted">
+          Workflow trigger format (auto-generated in the issue body):
+        </p>
+        <pre class="mono" style="margin:8px 0 0; background:#fafafa; border:1px solid var(--line); padding:10px; border-radius:12px; overflow:auto;">JOURNAL_FOLDER: &lt;folder&gt;
+TITLE: &lt;title&gt;
+AUTHORS: &lt;authors&gt;
+AFFILIATIONS: &lt;affiliations&gt;
+ORCID: &lt;orcid&gt;
+DOI: &lt;doi&gt;</pre>
       </div>
     </aside>
   </section>
@@ -264,15 +286,16 @@
 
 <script>
 (() => {
-  // === Configure repo constants ===
+  // ===== Repo config =====
   const OWNER = "shangguansuyan";
   const REPO  = "rubbish";
   const BRANCH = "main";
 
-  const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
-
+  // ===== Journal folder from query =====
   const qs = new URLSearchParams(location.search);
   const folder = qs.get("j") || "";
+
+  // ===== Elements =====
   const elTitle = document.getElementById("title");
   const elCrumb = document.getElementById("crumbJournal");
   const elPill  = document.getElementById("pillFolder");
@@ -282,7 +305,6 @@
   const elArticlesStatus = document.getElementById("articlesStatus");
   const elSearch = document.getElementById("search");
 
-  const elToken = document.getElementById("token");
   const elMsg   = document.getElementById("msg");
 
   const elFTitle = document.getElementById("fTitle");
@@ -292,40 +314,56 @@
   const elFDoi = document.getElementById("fDoi");
 
   const btnZenodo = document.getElementById("btnZenodo");
-  const btnSave = document.getElementById("btnSave");
+  const btnIssue = document.getElementById("btnIssue");
   const btnRefresh = document.getElementById("btnRefresh");
 
   if(!folder){
     elTitle.textContent = "Journal not specified";
     elCrumb.textContent = "Journal";
     elPill.textContent = "missing folder";
-    elArticlesStatus.textContent = "Missing ?j=<folder>.";
+    elArticlesStatus.textContent = "Missing ?j=<folder> in URL.";
     btnZenodo.disabled = true;
-    btnSave.disabled = true;
+    btnIssue.disabled = true;
+    btnRefresh.disabled = true;
     return;
   }
 
+  // ===== Utilities =====
   function esc(s){
     return String(s).replace(/[&<>"']/g, (c) => ({
       "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
     })[c]);
   }
 
-  const isImage = (name) => /\.(png|jpe?g|webp|gif)$/i.test(name);
+  function setMsg(kind, text){
+    elMsg.className = kind === "ok" ? "ok" : (kind === "danger" ? "danger" : "muted");
+    elMsg.textContent = text;
+  }
 
-  async function fetchJSON(url, token){
-    const headers = { "Accept":"application/vnd.github+json" };
-    if(token) headers["Authorization"] = `Bearer ${token}`;
-    const res = await fetch(url, { headers });
-    if(!res.ok){
-      const t = await res.text().catch(()=> "");
-      throw new Error(`HTTP ${res.status}: ${t || url}`);
-    }
+  function normalizeDoi(input){
+    const s = (input || "").trim();
+    if(!s) return "";
+    if(/^10\./.test(s)) return s.replace(/[)\],.]+$/,"");
+    const m = s.match(/10\.\d{4,9}\/\S+/);
+    return m ? m[0].replace(/[)\],.]+$/,"") : s;
+  }
+
+  function doiLink(doi){
+    const d = normalizeDoi(doi);
+    return `https://doi.org/${encodeURIComponent(d)}`;
+  }
+
+  async function fetchJSON(url){
+    const res = await fetch(url, { headers: { "Accept":"application/vnd.github+json" }});
+    if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
     return await res.json();
   }
 
+  const isImage = (name) => /\.(png|jpe?g|webp|gif)$/i.test(name);
+
   async function readNameTxt(){
     try{
+      const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
       const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
       if(item && item.content){
         return atob(item.content.replace(/\n/g,"")).trim();
@@ -336,6 +374,7 @@
 
   async function pickCover(){
     try{
+      const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
       const items = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}?ref=${encodeURIComponent(BRANCH)}`);
       const images = items.filter(x => x.type === "file" && isImage(x.name)).sort((a,b)=>a.name.localeCompare(b.name));
       if(images.length > 0) return images[0].download_url;
@@ -348,33 +387,16 @@
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
 
-  function normalizeDoi(input){
-    const s = (input || "").trim();
-    // Accept plain DOI or URL forms
-    if(!s) return "";
-    if(/^10\./.test(s)) return s;
-    const m = s.match(/10\.\d{4,9}\/\S+/);
-    return m ? m[0].replace(/[)\],.]+$/,"") : s;
-  }
-
-  function doiLink(doi){
-    const d = normalizeDoi(doi);
-    // Prefer doi.org resolver even if Zenodo DOI
-    return `https://doi.org/${encodeURIComponent(d)}`;
-  }
-
   function parseJSONL(text){
     const lines = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
     const out = [];
     for(const ln of lines){
       try{
-        const obj = JSON.parse(ln);
-        out.push(obj);
+        out.push(JSON.parse(ln));
       } catch {
-        // ignore malformed lines
+        // ignore malformed
       }
     }
-    // newest first if timestamp present
     out.sort((a,b)=> (b.ts||0) - (a.ts||0));
     return out;
   }
@@ -414,8 +436,9 @@
     elArticlesStatus.textContent = "Loading…";
     elArticles.innerHTML = "";
 
-    // Use raw URL to read article.txt (public). Cache-bust for near-real-time updates.
+    // Raw read of article.txt; cache-bust to make it "live"
     const raw = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encodeURIComponent(folder)}/article.txt?t=${Date.now()}`;
+
     try{
       const res = await fetch(raw, { cache: "no-store" });
       if(res.status === 404){
@@ -435,79 +458,24 @@
     }
   }
 
-  function setMsg(kind, text){
-    elMsg.className = kind === "ok" ? "ok" : (kind === "danger" ? "danger" : "muted");
-    elMsg.textContent = text;
-  }
-
-  async function upsertArticleTxtAppend(token, entryObj){
-    // 1) Try to get existing article.txt (to obtain sha + content)
-    const path = `${folder}/article.txt`;
-    const url = `${apiRoot}/${encodeURIComponent(path)}?ref=${encodeURIComponent(BRANCH)}`;
-
-    let oldText = "";
-    let sha = null;
-
-    try{
-      const cur = await fetchJSON(url, token);
-      sha = cur.sha;
-      if(cur.content){
-        oldText = atob(cur.content.replace(/\n/g,""));
-      }
-    } catch (e){
-      // If 404, we'll create a new file
-      // Any other error should bubble up
-      if(!String(e.message).includes("404")) throw e;
-    }
-
-    const line = JSON.stringify(entryObj);
-    const newText = (oldText ? oldText.replace(/\s+$/,"") + "\n" : "") + line + "\n";
-    const b64 = btoa(unescape(encodeURIComponent(newText)));
-
-    const putUrl = `${apiRoot}/${encodeURIComponent(path)}`;
-    const body = {
-      message: `Append article index: ${entryObj.doi}`,
-      content: b64,
-      branch: BRANCH
-    };
-    if(sha) body.sha = sha;
-
-    const res = await fetch(putUrl, {
-      method: "PUT",
-      headers: {
-        "Accept":"application/vnd.github+json",
-        "Authorization": `Bearer ${token}`,
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify(body)
-    });
-
-    if(!res.ok){
-      const t = await res.text().catch(()=> "");
-      throw new Error(`Write failed (HTTP ${res.status}): ${t}`);
-    }
-  }
-
-  // Zenodo login/upload entry point
+  // ===== Actions =====
   btnZenodo.addEventListener("click", () => {
-    // You can change this to Zenodo sandbox if desired:
-    // https://sandbox.zenodo.org/login
+    // Change to sandbox if you prefer: https://sandbox.zenodo.org/login
     const zenodoLogin = "https://zenodo.org/login";
     window.open(zenodoLogin, "_blank", "noopener");
     setMsg("muted",
-      "Zenodo opened in a new tab. After uploading your PDF and obtaining a DOI, paste it into the DOI field and save."
+      "Zenodo opened in a new tab. After uploading your PDF and obtaining a DOI, paste it into the DOI field and open the GitHub Issue draft."
     );
   });
 
   btnRefresh.addEventListener("click", () => loadArticles());
 
   elSearch.addEventListener("input", async () => {
-    // Avoid re-fetch; just filter current DOM by reloading from source quickly:
+    // re-filter by reloading; small repo so OK
     await loadArticles();
   });
 
-  btnSave.addEventListener("click", async () => {
-    const token = (elToken.value || "").trim();
+  btnIssue.addEventListener("click", () => {
     const title = (elFTitle.value || "").trim();
     const authors = (elFAuthors.value || "").trim();
     const affiliations = (elFAff.value || "").trim();
@@ -515,37 +483,41 @@
     const doiRaw = (elFDoi.value || "").trim();
     const doi = normalizeDoi(doiRaw);
 
-    if(!token){
-      setMsg("danger", "GitHub Token is required to write article.txt.");
-      return;
-    }
     if(!title || !authors || !affiliations || !orcid || !doi){
       setMsg("danger", "All fields are required: Title, Authors, Affiliations, ORCID, DOI.");
       return;
     }
 
-    const entry = {
-      ts: Date.now(),
-      title,
-      authors,
-      affiliations,
-      orcid,
-      doi
-    };
+    // Workflow requires issue title starting with "[ARTICLE] "
+    const issueTitle = (`[ARTICLE] ${title}`).slice(0, 180);
 
-    try{
-      setMsg("muted", "Saving…");
-      await upsertArticleTxtAppend(token, entry);
-      setMsg("ok", "Saved. Refreshing article list…");
-      await loadArticles();
-    } catch (e){
-      console.error(e);
-      setMsg("danger", String(e.message || e));
-    }
+    // Body lines parsed by workflow
+    const body =
+`JOURNAL_FOLDER: ${folder}
+TITLE: ${title}
+AUTHORS: ${authors}
+AFFILIATIONS: ${affiliations}
+ORCID: ${orcid}
+DOI: ${doi}
+
+(Submitted from journal page)`;
+
+    const url = new URL(`https://github.com/${OWNER}/${REPO}/issues/new`);
+    url.searchParams.set("title", issueTitle);
+    url.searchParams.set("body", body);
+
+    window.open(url.toString(), "_blank", "noopener");
+    setMsg("ok",
+      "A GitHub Issue draft has been opened in a new tab.\n" +
+      "Please submit it. The index will update automatically after the workflow runs.\n" +
+      "Tip: if you do not see the new article immediately, wait a moment and click “Refresh list”."
+    );
   });
 
+  // ===== Init =====
   async function init(){
     elPill.textContent = folder;
+
     const [name, cover] = await Promise.all([readNameTxt(), pickCover()]);
     document.title = `${name} | Rubbish`;
     elTitle.textContent = name;
