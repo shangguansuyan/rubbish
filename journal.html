@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Journal</title>
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#111111;
+      --muted:#5b5b5b;
+      --line:#e7e7e7;
+      --chip:#f4f4f4;
+      --link:#0b57d0;
+      --max:1100px;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+      color:var(--fg);
+      background:var(--bg);
+    }
+    a{color:var(--link); text-decoration:none}
+    a:hover{text-decoration:underline}
+    header{
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      background:#fff;
+      z-index:10;
+    }
+    .wrap{max-width:var(--max); margin:0 auto; padding:18px 18px;}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .crumbs{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .crumbs a{color:inherit}
+    .brand{
+      font-weight:800; color:#111;
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:#111;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{
+      background:#fff;
+      color:#111;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:18px;
+      padding:18px 0 8px;
+      border-bottom:1px solid var(--line);
+    }
+    @media (max-width: 860px){ .hero{grid-template-columns: 1fr;} }
+
+    .cover{
+      width:100%;
+      aspect-ratio: 4/3;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      object-fit:cover;
+      background:#f6f6f6;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:30px;
+      letter-spacing:-.3px;
+    }
+    .desc{margin:0; color:var(--muted); line-height:1.55; font-size:14px;}
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+    .pill{
+      font-size:12px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:var(--chip);
+      border:1px solid var(--line);
+      color:#333;
+    }
+
+    .content{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:18px;
+      padding:18px 0 34px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .content{grid-template-columns: 1fr;} }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:14px;
+      background:#fff;
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:16px;
+    }
+    .muted{color:var(--muted); font-size:12.5px; line-height:1.55;}
+    .search input{
+      width:100%;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-size:14px;
+      outline:none;
+    }
+
+    .articles{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .article{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:12px 12px;
+      background:#fff;
+    }
+    .article h3{
+      margin:0 0 6px;
+      font-size:15px;
+      line-height:1.3;
+    }
+    .article .meta{
+      margin:0;
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.45;
+    }
+    .hr{
+      height:1px; background:var(--line);
+      margin:12px 0;
+    }
+
+    label{display:block; font-size:12px; color:#333; margin:10px 0 6px;}
+    input, textarea{
+      width:100%;
+      padding:10px 10px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      font-size:14px;
+      outline:none;
+    }
+    textarea{min-height:84px; resize:vertical}
+
+    .danger{
+      color:#b00020;
+      font-size:12.5px;
+      line-height:1.4;
+      margin-top:8px;
+    }
+    .ok{
+      color:#0b7a2a;
+      font-size:12.5px;
+      line-height:1.4;
+      margin-top:8px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="crumbs">
+        <a href="index.html" class="brand">Rubbish</a>
+        <span>›</span>
+        <span id="crumbJournal">Journal</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <!-- No submit button on homepage. Here we provide it. -->
+        <button id="btnZenodo" class="btn" type="button">Submit via Zenodo</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <img id="cover" class="cover" alt="Journal cover" />
+    <div>
+      <h1 id="title">Journal</h1>
+      <p class="desc">
+        Submissions are handled through Zenodo. After uploading your PDF and obtaining a DOI,
+        return here to register the article metadata into this journal index.
+      </p>
+      <div class="row">
+        <span class="pill" id="pillFolder">folder</span>
+        <span class="pill">Open access</span>
+        <span class="pill">Index updates in real time</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div>
+      <div class="panel">
+        <h2>Articles</h2>
+        <div class="search" style="margin:10px 0 12px;">
+          <input id="search" type="search" placeholder="Search articles by title, author, DOI" autocomplete="off" />
+        </div>
+        <div id="articles" class="articles" aria-live="polite"></div>
+        <p id="articlesStatus" class="muted" style="margin-top:10px;">Loading…</p>
+      </div>
+    </div>
+
+    <aside>
+      <div class="panel">
+        <h2>Register your article (required)</h2>
+        <p class="muted">
+          1) Click “Submit via Zenodo” to log in and upload your PDF.<br/>
+          2) Copy the DOI assigned by Zenodo.<br/>
+          3) Fill in all fields below (no field can be empty).<br/>
+          4) Submit to append into <b>article.txt</b> in this journal folder.
+        </p>
+
+        <div class="hr"></div>
+
+        <label>GitHub Token (required for writing article.txt)</label>
+        <input id="token" type="password" placeholder="Fine-grained PAT with Contents: Read & Write" />
+
+        <label>Title</label>
+        <textarea id="fTitle" placeholder="Article title"></textarea>
+
+        <label>Authors</label>
+        <textarea id="fAuthors" placeholder="Author list (e.g., A. Smith; B. Lee)"></textarea>
+
+        <label>Affiliations</label>
+        <textarea id="fAff" placeholder="Institution(s)"></textarea>
+
+        <label>ORCID</label>
+        <input id="fOrcid" type="text" placeholder="e.g., 0000-0002-1825-0097" />
+
+        <label>DOI</label>
+        <input id="fDoi" type="text" placeholder="e.g., 10.5281/zenodo.1234567" />
+
+        <div style="display:flex; gap:10px; margin-top:12px;">
+          <button id="btnSave" class="btn" type="button">Save to journal index</button>
+          <button id="btnRefresh" class="btn secondary" type="button">Refresh list</button>
+        </div>
+
+        <p id="msg" class="muted" style="margin-top:10px;"></p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script>
+(() => {
+  // === Configure repo constants ===
+  const OWNER = "shangguansuyan";
+  const REPO  = "rubbish";
+  const BRANCH = "main";
+
+  const apiRoot = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+
+  const qs = new URLSearchParams(location.search);
+  const folder = qs.get("j") || "";
+  const elTitle = document.getElementById("title");
+  const elCrumb = document.getElementById("crumbJournal");
+  const elPill  = document.getElementById("pillFolder");
+  const elCover = document.getElementById("cover");
+
+  const elArticles = document.getElementById("articles");
+  const elArticlesStatus = document.getElementById("articlesStatus");
+  const elSearch = document.getElementById("search");
+
+  const elToken = document.getElementById("token");
+  const elMsg   = document.getElementById("msg");
+
+  const elFTitle = document.getElementById("fTitle");
+  const elFAuthors = document.getElementById("fAuthors");
+  const elFAff = document.getElementById("fAff");
+  const elFOrcid = document.getElementById("fOrcid");
+  const elFDoi = document.getElementById("fDoi");
+
+  const btnZenodo = document.getElementById("btnZenodo");
+  const btnSave = document.getElementById("btnSave");
+  const btnRefresh = document.getElementById("btnRefresh");
+
+  if(!folder){
+    elTitle.textContent = "Journal not specified";
+    elCrumb.textContent = "Journal";
+    elPill.textContent = "missing folder";
+    elArticlesStatus.textContent = "Missing ?j=<folder>.";
+    btnZenodo.disabled = true;
+    btnSave.disabled = true;
+    return;
+  }
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+    })[c]);
+  }
+
+  const isImage = (name) => /\.(png|jpe?g|webp|gif)$/i.test(name);
+
+  async function fetchJSON(url, token){
+    const headers = { "Accept":"application/vnd.github+json" };
+    if(token) headers["Authorization"] = `Bearer ${token}`;
+    const res = await fetch(url, { headers });
+    if(!res.ok){
+      const t = await res.text().catch(()=> "");
+      throw new Error(`HTTP ${res.status}: ${t || url}`);
+    }
+    return await res.json();
+  }
+
+  async function readNameTxt(){
+    try{
+      const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
+      if(item && item.content){
+        return atob(item.content.replace(/\n/g,"")).trim();
+      }
+    } catch {}
+    return folder;
+  }
+
+  async function pickCover(){
+    try{
+      const items = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}?ref=${encodeURIComponent(BRANCH)}`);
+      const images = items.filter(x => x.type === "file" && isImage(x.name)).sort((a,b)=>a.name.localeCompare(b.name));
+      if(images.length > 0) return images[0].download_url;
+    } catch {}
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
+      <rect width='100%' height='100%' fill='#f2f2f2'/>
+      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
+            font-family='Arial' font-size='22' fill='#777'>No cover image</text>
+    </svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+
+  function normalizeDoi(input){
+    const s = (input || "").trim();
+    // Accept plain DOI or URL forms
+    if(!s) return "";
+    if(/^10\./.test(s)) return s;
+    const m = s.match(/10\.\d{4,9}\/\S+/);
+    return m ? m[0].replace(/[)\],.]+$/,"") : s;
+  }
+
+  function doiLink(doi){
+    const d = normalizeDoi(doi);
+    // Prefer doi.org resolver even if Zenodo DOI
+    return `https://doi.org/${encodeURIComponent(d)}`;
+  }
+
+  function parseJSONL(text){
+    const lines = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+    const out = [];
+    for(const ln of lines){
+      try{
+        const obj = JSON.parse(ln);
+        out.push(obj);
+      } catch {
+        // ignore malformed lines
+      }
+    }
+    // newest first if timestamp present
+    out.sort((a,b)=> (b.ts||0) - (a.ts||0));
+    return out;
+  }
+
+  function renderArticles(list){
+    const term = (elSearch.value || "").trim().toLowerCase();
+    const filtered = !term ? list : list.filter(a =>
+      String(a.title||"").toLowerCase().includes(term) ||
+      String(a.authors||"").toLowerCase().includes(term) ||
+      String(a.affiliations||"").toLowerCase().includes(term) ||
+      String(a.orcid||"").toLowerCase().includes(term) ||
+      String(a.doi||"").toLowerCase().includes(term)
+    );
+
+    elArticles.innerHTML = filtered.map(a => {
+      const title = esc(a.title || "Untitled");
+      const authors = esc(a.authors || "");
+      const aff = esc(a.affiliations || "");
+      const orcid = esc(a.orcid || "");
+      const doi = esc(a.doi || "");
+      const link = doi ? doiLink(doi) : "";
+      return `
+        <div class="article">
+          <h3>${title}</h3>
+          <p class="meta"><b>Authors:</b> ${authors || "—"}</p>
+          <p class="meta"><b>Affiliations:</b> ${aff || "—"}</p>
+          <p class="meta"><b>ORCID:</b> ${orcid || "—"}</p>
+          <p class="meta"><b>DOI:</b> ${doi ? `<a href="${esc(link)}" target="_blank" rel="noopener">${doi}</a>` : "—"}</p>
+        </div>
+      `;
+    }).join("");
+
+    elArticlesStatus.textContent = `${filtered.length} article(s) shown`;
+  }
+
+  async function loadArticles(){
+    elArticlesStatus.textContent = "Loading…";
+    elArticles.innerHTML = "";
+
+    // Use raw URL to read article.txt (public). Cache-bust for near-real-time updates.
+    const raw = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encodeURIComponent(folder)}/article.txt?t=${Date.now()}`;
+    try{
+      const res = await fetch(raw, { cache: "no-store" });
+      if(res.status === 404){
+        elArticlesStatus.textContent = "No articles yet (article.txt not found).";
+        renderArticles([]);
+        return [];
+      }
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const list = parseJSONL(text);
+      renderArticles(list);
+      return list;
+    } catch (e){
+      console.error(e);
+      elArticlesStatus.textContent = "Failed to load article.txt.";
+      return [];
+    }
+  }
+
+  function setMsg(kind, text){
+    elMsg.className = kind === "ok" ? "ok" : (kind === "danger" ? "danger" : "muted");
+    elMsg.textContent = text;
+  }
+
+  async function upsertArticleTxtAppend(token, entryObj){
+    // 1) Try to get existing article.txt (to obtain sha + content)
+    const path = `${folder}/article.txt`;
+    const url = `${apiRoot}/${encodeURIComponent(path)}?ref=${encodeURIComponent(BRANCH)}`;
+
+    let oldText = "";
+    let sha = null;
+
+    try{
+      const cur = await fetchJSON(url, token);
+      sha = cur.sha;
+      if(cur.content){
+        oldText = atob(cur.content.replace(/\n/g,""));
+      }
+    } catch (e){
+      // If 404, we'll create a new file
+      // Any other error should bubble up
+      if(!String(e.message).includes("404")) throw e;
+    }
+
+    const line = JSON.stringify(entryObj);
+    const newText = (oldText ? oldText.replace(/\s+$/,"") + "\n" : "") + line + "\n";
+    const b64 = btoa(unescape(encodeURIComponent(newText)));
+
+    const putUrl = `${apiRoot}/${encodeURIComponent(path)}`;
+    const body = {
+      message: `Append article index: ${entryObj.doi}`,
+      content: b64,
+      branch: BRANCH
+    };
+    if(sha) body.sha = sha;
+
+    const res = await fetch(putUrl, {
+      method: "PUT",
+      headers: {
+        "Accept":"application/vnd.github+json",
+        "Authorization": `Bearer ${token}`,
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      const t = await res.text().catch(()=> "");
+      throw new Error(`Write failed (HTTP ${res.status}): ${t}`);
+    }
+  }
+
+  // Zenodo login/upload entry point
+  btnZenodo.addEventListener("click", () => {
+    // You can change this to Zenodo sandbox if desired:
+    // https://sandbox.zenodo.org/login
+    const zenodoLogin = "https://zenodo.org/login";
+    window.open(zenodoLogin, "_blank", "noopener");
+    setMsg("muted",
+      "Zenodo opened in a new tab. After uploading your PDF and obtaining a DOI, paste it into the DOI field and save."
+    );
+  });
+
+  btnRefresh.addEventListener("click", () => loadArticles());
+
+  elSearch.addEventListener("input", async () => {
+    // Avoid re-fetch; just filter current DOM by reloading from source quickly:
+    await loadArticles();
+  });
+
+  btnSave.addEventListener("click", async () => {
+    const token = (elToken.value || "").trim();
+    const title = (elFTitle.value || "").trim();
+    const authors = (elFAuthors.value || "").trim();
+    const affiliations = (elFAff.value || "").trim();
+    const orcid = (elFOrcid.value || "").trim();
+    const doiRaw = (elFDoi.value || "").trim();
+    const doi = normalizeDoi(doiRaw);
+
+    if(!token){
+      setMsg("danger", "GitHub Token is required to write article.txt.");
+      return;
+    }
+    if(!title || !authors || !affiliations || !orcid || !doi){
+      setMsg("danger", "All fields are required: Title, Authors, Affiliations, ORCID, DOI.");
+      return;
+    }
+
+    const entry = {
+      ts: Date.now(),
+      title,
+      authors,
+      affiliations,
+      orcid,
+      doi
+    };
+
+    try{
+      setMsg("muted", "Saving…");
+      await upsertArticleTxtAppend(token, entry);
+      setMsg("ok", "Saved. Refreshing article list…");
+      await loadArticles();
+    } catch (e){
+      console.error(e);
+      setMsg("danger", String(e.message || e));
+    }
+  });
+
+  async function init(){
+    elPill.textContent = folder;
+    const [name, cover] = await Promise.all([readNameTxt(), pickCover()]);
+    document.title = `${name} | Rubbish`;
+    elTitle.textContent = name;
+    elCrumb.textContent = name;
+    elCover.src = cover;
+    elCover.alt = `${name} cover`;
+
+    await loadArticles();
+  }
+
+  init().catch(err => {
+    console.error(err);
+    setMsg("danger", "Failed to initialize journal page. Check folder name and repository public access.");
+  });
+})();
+</script>
+</body>
+</html>
