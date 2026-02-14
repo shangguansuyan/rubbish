@@ -159,7 +159,6 @@
   }
 
   async function init(){
-    // journal name
     let journalName = folder;
     try{
       const item = await fetchJSON(`${apiRoot}/${encodeURIComponent(folder)}/name.txt?ref=${encodeURIComponent(BRANCH)}`);
