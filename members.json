@@ -150,5 +150,15 @@
     "role": "Editor-in-Chief",
     "interests": "network pharmacology, molecular docking, drug delivery, PF, cancer",
     "orcid": "0000-0012-3698-1253"
+  },
+  {
+    "name": "Jiajun Gui",
+    "email": "a1074646773@gmail.com",
+    "affiliations": [
+      "Fujian Medical University"
+    ],
+    "role": "编辑委员会成员",
+    "interests": "生物信息学，风湿病学，血液病学",
+    "orcid": "0009-0008-2328-4030"
   }
 ]
