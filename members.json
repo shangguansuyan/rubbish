@@ -140,5 +140,15 @@
     "role": "Editorial Board Member",
     "interests": "Additive manufacturing",
     "orcid": "0001"
+  },
+  {
+    "name": "Jianhong Qi",
+    "email": "2236205811@qq.com",
+    "affiliations": [
+      "Shandong univerisity"
+    ],
+    "role": "Editor-in-Chief",
+    "interests": "network pharmacology, molecular docking, drug delivery, PF, cancer",
+    "orcid": "0000-0012-3698-1253"
   }
 ]
