@@ -100,5 +100,15 @@
     "role": "编辑委员会成员",
     "interests": "微纳制造，激光加工",
     "orcid": "0009-0000-6987-8864"
+  },
+  {
+    "name": "Xinhe Lu",
+    "email": "luxh@hust.edu.cn",
+    "affiliations": [
+      "Huazhong University of Science and Technology"
+    ],
+    "role": "Editorial Board Member",
+    "interests": "Bioinformatics, Population study, Protein design",
+    "orcid": "0009-0008-2912-0109"
   }
 ]
