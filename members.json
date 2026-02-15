@@ -130,5 +130,15 @@
     "role": "PhD student",
     "interests": "Microbiome, Nutrition",
     "orcid": "0009-0000-1640-1579"
+  },
+  {
+    "name": "Yaole Cui, Hongtu Tan, Zheng Shi",
+    "email": "cuiyaole@msu.edu",
+    "affiliations": [
+      "Southern University of Science and Technology"
+    ],
+    "role": "Editorial Board Member",
+    "interests": "Additive manufacturing",
+    "orcid": "0001"
   }
 ]
