@@ -160,5 +160,15 @@
     "role": "编辑委员会成员",
     "interests": "生物信息学，风湿病学，血液病学",
     "orcid": "0009-0008-2328-4030"
+  },
+  {
+    "name": "Yuze Hao",
+    "email": "dasce@outlook.com",
+    "affiliations": [
+      "Inner Mongolia University"
+    ],
+    "role": "Editor in Chief",
+    "interests": "Matinfo",
+    "orcid": "0000-0001-7878-4239"
   }
 ]
