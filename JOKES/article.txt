@@ -1,0 +1,1 @@
+{"ts":1771136237182,"title":"When Images Can No Longer Be Trusted: Generative AI and the Fragility of Visual Evidence in Life Sciences","authors":"Jinghua Gu; Shuyan Sheng","affiliations":"Anhui Medical University","orcid":"0009-0000-8691-1312","doi":"10.5281/zenodo.18646257","source_issue":"https://github.com/shangguansuyan/rubbish/issues/13"}
