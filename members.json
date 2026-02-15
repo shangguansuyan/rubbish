@@ -170,5 +170,15 @@
     "role": "Editor in Chief",
     "interests": "Matinfo",
     "orcid": "0000-0001-7878-4239"
+  },
+  {
+    "name": "TongC",
+    "email": "1469566598@qq.com",
+    "affiliations": [
+      "huazhong university science and technologgy"
+    ],
+    "role": "Editorial Board Member, Editor-in-Chief of《Rubbish Comminications》",
+    "interests": "biomaterial",
+    "orcid": "////"
   }
 ]
