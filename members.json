@@ -230,5 +230,15 @@
     "role": "Associate Editor",
     "interests": "Bioinformatics, Biomarker, Machine Learning, Multi-omics, Computational Biology, Cancer",
     "orcid": "0009-0000-7000-8006"
+  },
+  {
+    "name": "Anqi Feng",
+    "email": "afeng11@jhu.edu",
+    "affiliations": [
+      "Johns Hopkins University"
+    ],
+    "role": "editorial board member",
+    "interests": "Neuroscience",
+    "orcid": "0000-0002-4459-2998"
   }
 ]
