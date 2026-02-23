@@ -220,5 +220,15 @@
     "role": "Editor in Chief",
     "interests": "Computer Science and Technology",
     "orcid": "0009-0005-2080-7711"
+  },
+  {
+    "name": "Kewei Du",
+    "email": "dkwyxjy@163.com",
+    "affiliations": [
+      "Lanzhou University"
+    ],
+    "role": "Associate Editor",
+    "interests": "Bioinformatics, Biomarker, Machine Learning, Multi-omics, Computational Biology, Cancer",
+    "orcid": "0009-0000-7000-8006"
   }
 ]
