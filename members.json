@@ -240,5 +240,15 @@
     "role": "editorial board member",
     "interests": "Neuroscience",
     "orcid": "0000-0002-4459-2998"
+  },
+  {
+    "name": "Haibo Hu",
+    "email": "huhaibo1996@smail.sut.edu.cn",
+    "affiliations": [
+      "Shenyang University of Technology"
+    ],
+    "role": "Editor in Chief",
+    "interests": "Management, Management Science, Operations Research",
+    "orcid": "0009-0003-2442-5951"
   }
 ]
