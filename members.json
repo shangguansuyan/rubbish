@@ -250,5 +250,15 @@
     "role": "Editor in Chief",
     "interests": "Management, Management Science, Operations Research",
     "orcid": "0009-0003-2442-5951"
+  },
+  {
+    "name": "Siyuan Yu",
+    "email": "251001126@yzu.edu.cn",
+    "affiliations": [
+      "Yangzhou University"
+    ],
+    "role": "editorial board manner",
+    "interests": "Nano&chemistry",
+    "orcid": "0000-0814-2026-2000"
   }
 ]
